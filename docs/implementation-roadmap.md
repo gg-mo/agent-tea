@@ -11,7 +11,9 @@
 - **APIs:** Next.js Route Handlers (`/api/*`) for scoring, ingestion, results, sharing
 - **Auth (phase-gated):** Anonymous first-run for viral flow, optional account linking later
 - **Analytics:** Event table in Supabase + optional Vercel Analytics
-- **Asset pipeline:** Character illustration manifests + share card render endpoint
+- **Asset pipeline:** Cartoon lobster mascot system + type illustration manifests + share card render endpoint
+- **Instruction assets:** Two instruction markdown files (coding agent and chatbot variants) hosted in repo and linked from UI
+- **Ingestion contracts:** JSON ingestion for coding agents (cURL-friendly), compact encoded answer string ingestion for chatbot users
 
 ## Milestone Map
 
@@ -19,6 +21,29 @@
 - `AE-7` to `AE-12`: Results depth, shareability, viral loops
 - `AE-13` to `AE-17`: Compare mode, social proof, optional accounts
 - `AE-18` to `AE-22`: Hardening, observability, launch operations
+
+## Input Protocol Decision (Locked for v1)
+
+- **Coding-agent path (preferred):** agent sends JSON payload to API via cURL
+- **Chatbot path:** chatbot returns compact encoded answer string that user pastes into Agent Tea UI
+
+**Chatbot encoded format (v1):**
+
+- Prefix: `AT1|`
+- Body: `Q01-5AQ02-3A...Q20-4`
+- Optional spicy body: `|S:Q21-4AQ22-2...`
+- Optional integrity checksum: `|C:<4-char>`
+
+Example:
+
+`AT1|Q01-5AQ02-2AQ03-4AQ04-1AQ05-5AQ06-4AQ07-5AQ08-2AQ09-4AQ10-1AQ11-5AQ12-2AQ13-4AQ14-2AQ15-5AQ16-4AQ17-2AQ18-4AQ19-1AQ20-5|C:K9P3`
+
+Decoder behavior:
+
+- Parse tokens as `QNN-V` where `V` is 1-5
+- Reject duplicates/out-of-range values
+- Require all core questions for final scoring
+- Ignore unknown tokens safely and log parse warnings
 
 ---
 
@@ -100,6 +125,7 @@ Create base schema for sessions, answers, results, spicy responses, and share ca
 - `session_results`
 - `share_cards`
 - `event_log`
+- `instruction_runs` (tracks intake mode, raw payload, parse status)
 
 **Acceptance Criteria**
 - Migration applies cleanly; core create/read paths tested
@@ -109,11 +135,12 @@ Create base schema for sessions, answers, results, spicy responses, and share ca
 Implement AE-3 for Agent Tea using Supabase SQL migrations.
 
 Requirements:
-1) Create tables: test_sessions, session_answers, session_results, share_cards, event_log.
-2) Include timestamps, foreign keys, and indexes (session_id, created_at, type_code).
-3) Add RLS policies supporting anonymous first-run sessions while preventing broad data exposure.
-4) Add SQL seed for dimension metadata (C/Y, K/B, V/T, G/O).
-5) Add docs/schema-v1.md with ERD-style explanation.
+1) Create tables: test_sessions, session_answers, session_results, share_cards, event_log, instruction_runs.
+2) Include columns for intake_mode (coding_agent/chatbot), optional per-answer short reasoning, and optional raw encoded payload storage.
+3) Include timestamps, foreign keys, and indexes (session_id, created_at, type_code, intake_mode).
+4) Add RLS policies supporting anonymous first-run sessions while preventing broad data exposure.
+5) Add SQL seed for dimension metadata (C/Y, K/B, V/T, G/O).
+6) Add docs/schema-v1.md with ERD-style explanation.
 
 Output:
 - Migration SQL files.
@@ -184,16 +211,20 @@ Output:
 ### AE-6: Anonymous Session API + Persistence
 
 **Goal**
-Enable end-to-end save/score/fetch flow without account creation.
+Enable end-to-end save/score/fetch flow without account creation across both coding-agent and chatbot intake modes.
 
 **Deliverables**
 - `POST /api/sessions`
-- `POST /api/sessions/:id/answers`
+- `POST /api/sessions/:id/answers` (direct/manual writes)
+- `POST /api/sessions/:id/ingest-coding-agent` (JSON/cURL)
+- `POST /api/sessions/:id/ingest-encoded` (chatbot encoded string)
 - `POST /api/sessions/:id/score`
 - `GET /api/sessions/:id/result`
+- Input parsing/validation module for encoded format and coding-agent schema
+- Store optional coding-agent short reasoning snippets per answer
 
 **Acceptance Criteria**
-- User can complete test and view persistent result from a single session URL
+- User can complete via coding-agent JSON or chatbot encoded paste and view persistent result from a single session URL
 
 **Coding Agent Prompt**
 ```text
@@ -201,10 +232,11 @@ Implement AE-6 for Agent Tea.
 
 Requirements:
 1) Add session creation endpoint returning session_id and question payload.
-2) Add answer submission endpoint supporting batched writes.
-3) Add score endpoint invoking scoring engine and persisting result.
-4) Add result endpoint returning display-ready payload.
-5) Add request validation, error handling, and integration tests for all endpoints.
+2) Add coding-agent ingestion endpoint that accepts JSON answers and optional short first-person reasons per answer.
+3) Add chatbot ingestion endpoint that accepts encoded payload string and decodes to normalized answers.
+4) Add score endpoint invoking scoring engine and persisting result.
+5) Add result endpoint returning display-ready payload including optional reasoning snippets for coding-agent sessions.
+6) Add request validation, error handling, and integration tests for all endpoints.
 
 Output:
 - API routes and validation strategy.
@@ -224,7 +256,9 @@ Ship homepage with final name and launch line: "Your AI has tea about you."
 **Deliverables**
 - Hero section + CTA + quick explainer
 - Agent selector (Coding Agent / Chatbot)
-- Prompt copy panels with one-click copy
+- Two entry panels with one-click copy instructions:
+  - Coding agent: points to coding-agent markdown instruction file
+  - Chatbot: points to chatbot markdown instruction file and reveals encoded-answer paste box
 
 **Acceptance Criteria**
 - First-time user can reach test flow in under 2 clicks
@@ -236,9 +270,12 @@ Implement AE-7 for Agent Tea frontend.
 Requirements:
 1) Build responsive landing page with headline: "Your AI has tea about you."
 2) Add clear CTA to start test.
-3) Add agent type selector with tailored prompt blocks (markdown and plain prompt variants).
-4) Add copy-to-clipboard UI and success feedback.
-5) Keep visual style playful, bold, and mobile-friendly.
+3) Add two entry points:
+   - Coding Agent: show instruction text "follow the instruction in this file: <coding-agent-instructions.md URL>".
+   - Chatbot: show instruction text "follow the instruction in this file: <chatbot-instructions.md URL>" and reveal encoded paste input.
+4) Add copy-to-clipboard UI and success feedback for both entry points.
+5) Keep visual style playful, bold, modern, and mobile-friendly.
+6) Add cartoon lobster mascot in hero and entry-point cards.
 
 Output:
 - Component/file map.
@@ -246,49 +283,54 @@ Output:
 - Accessibility notes (focus states, contrast, keyboard nav).
 ```
 
-### AE-8: Test Runner UI (Shuffled + Smooth UX)
+### AE-8: Dual Intake UX + Instruction File System
 
 **Goal**
-Create fast test-taking UI with anti-adjacent-opposites logic.
+Ship seamless intake for coding-agent and chatbot workflows, each backed by dedicated instruction markdown files.
 
 **Deliverables**
-- Question renderer with 5-point Likert controls
-- Progress indicator and save-on-change behavior
-- Shuffle logic respecting "no direct opposite back-to-back"
+- `public/instructions/coding-agent.md` with question set and cURL submission contract
+- `public/instructions/chatbot.md` with same question essence + encoded output instructions
+- Chatbot encoded input UI with parser feedback states (valid/invalid/partial)
+- Session-state transitions from pending -> ingested -> scored
 
 **Acceptance Criteria**
-- Test completion under 2-3 minutes with no data loss on refresh
+- A user can complete either flow without confusion and recover from invalid pasted payloads
 
 **Coding Agent Prompt**
 ```text
 Implement AE-8 for Agent Tea.
 
 Requirements:
-1) Build test runner UI for 20 core + optional spicy interleaving.
-2) Implement deterministic shuffle using session seed.
-3) Enforce rule: opposite-paired prompts cannot appear consecutively.
-4) Auto-save answers and recover state on refresh.
-5) Add progress bar and completion gate.
+1) Create two markdown instruction files (coding-agent and chatbot) with aligned question logic.
+2) For coding-agent instructions, define JSON submission contract and cURL example.
+3) For chatbot instructions, define encoded format and explicit "copy this encoded output back into Agent Tea" step.
+4) Build chatbot paste UI with inline parse errors and actionable fixes.
+5) Add server/client validation so malformed payloads never corrupt sessions.
 
 Output:
-- Shuffle algorithm details.
-- UX flow for load/save/recover.
+- Instruction file structure and URLs.
+- UX flow for coding-agent and chatbot paths.
 - Manual QA checklist.
 ```
 
-### AE-9: Results Page v1 (Type + Bars + Signals)
+### AE-9: Animated Answer Replay + Results Page v1
 
 **Goal**
-Render highly shareable results page sections A-E from product spec.
+Render highly shareable results with animated replay from empty question state to selected answers.
 
 **Deliverables**
 - Type headline + nickname
 - Dimension bars with percentages
 - Strongest signals (top 3)
 - "What agent loves" and "What may frustrate" cards
+- Animated reveal timeline:
+  - question row starts empty
+  - transitions to chosen option state
+  - optional coding-agent reason appears in lobster chat bubble
 
 **Acceptance Criteria**
-- Results page is fully generated from API payload with no hardcoded type
+- Results page and replay animations are fully generated from payload with no hardcoded answer states
 
 **Coding Agent Prompt**
 ```text
@@ -299,7 +341,9 @@ Requirements:
 2) Render 4 dimension bars with percent labels and side descriptions.
 3) Add strongest signals block (top 3 traits by magnitude).
 4) Add two narrative cards: "loves" and "frustrates".
-5) Ensure responsive layout and screenshot-ready composition.
+5) Build animated answer replay showing empty -> selected transitions.
+6) If session is coding-agent sourced and reasons exist, render short chatty reason snippets in lobster speech bubbles.
+7) Ensure responsive layout and screenshot-ready composition.
 
 Output:
 - Component architecture.
@@ -346,9 +390,10 @@ Generate social cards with type, nickname, and top stats.
 - `GET /api/share-card/:sessionId` image endpoint (OG-compatible)
 - Card templates for normal + intrusive modes
 - Download/share buttons on results page
+- Lobster-forward visual composition that matches product style
 
 **Acceptance Criteria**
-- Generated card is crisp on X/LinkedIn/Discord previews
+- Generated card is crisp on X/LinkedIn/Discord previews and visually recognizable as Agent Tea
 
 **Coding Agent Prompt**
 ```text
@@ -357,7 +402,7 @@ Implement AE-11 for Agent Tea.
 Requirements:
 1) Build dynamic share-card image endpoint (e.g., @vercel/og or Satori stack).
 2) Include type code, nickname, and 3 metric highlights.
-3) Support normal and intrusive visual variants.
+3) Support normal and intrusive visual variants with lobster mascot presence.
 4) Add caching headers and stable URLs.
 5) Wire share actions from results page.
 
@@ -370,26 +415,28 @@ Output:
 ### AE-12: Character Figure System v1
 
 **Goal**
-Implement consistent illustration pipeline with type-aware variants.
+Implement a signature cartoon lobster mascot and type-aware character system.
 
 **Deliverables**
+- Lobster mascot system (base mascot + pose/expression variants)
 - Illustration manifest mapping 16 types to character assets
 - Shared visual style tokens (palette, shape language)
 - Result page + share card figure integration
 
 **Acceptance Criteria**
-- Every type maps to a consistent figure without layout breakage
+- Lobster appears consistently across landing, replay bubbles, result page, and share card without style drift
 
 **Coding Agent Prompt**
 ```text
 Implement AE-12 for Agent Tea.
 
 Requirements:
-1) Add figure asset manifest keyed by 16 type codes.
-2) Define design tokens for consistent palette/background motif.
-3) Integrate figures into result page and share cards.
-4) Add fallback image behavior for missing assets.
-5) Document asset naming and contribution rules.
+1) Design and add a cartoon lobster mascot system (SVG-friendly) with expressive variants.
+2) Add figure asset manifest keyed by 16 type codes plus lobster assets.
+3) Define design tokens for consistent palette/background motif and modern UI look.
+4) Integrate lobster into landing hero, intake UI, and coding-agent reasoning bubble.
+5) Integrate type figures into result page and share cards with fallback behavior.
+6) Document asset naming and contribution rules.
 
 Output:
 - Asset manifest format.
