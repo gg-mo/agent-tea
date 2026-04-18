@@ -10,7 +10,7 @@
 
 Primary recommendation:
 
-- **"Your AI has opinions about you."**
+- **"Your AI has tea about you."**
 - Subhead: **"Let it rate your work style and reveal your type."**
 
 Alternatives:

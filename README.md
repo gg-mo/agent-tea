@@ -1,2 +1,2 @@
-# who-approved-my-human
-What does your AI really think of you? My Human Is.. turns agent feedback into a personality type.
+# Agent Tea
+Your AI has tea about you. Agent Tea turns agent feedback into a personality type.

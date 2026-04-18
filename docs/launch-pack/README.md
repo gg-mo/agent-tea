@@ -28,7 +28,7 @@ This folder captures the agreed v1 direction for **Who Approved My Human** and b
 
 ## Product Promise (v1)
 
-"What does your AI actually think of you?"
+"Your AI has tea about you."
 
 Short, playful variant options:
 
