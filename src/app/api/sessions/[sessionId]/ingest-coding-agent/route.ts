@@ -1,0 +1,38 @@
+import { codingAgentIngestBodySchema } from '@/lib/ingestion/ingestion-schemas';
+import { ingestCodingAgentAnswers, requireSession } from '@/lib/server/session-service';
+import { jsonResponse, safeParseJson } from '@/lib/server/http';
+
+type ParamsContext = {
+  params: { sessionId: string } | Promise<{ sessionId: string }>;
+};
+
+export async function POST(request: Request, context: ParamsContext) {
+  try {
+    const { sessionId } = await Promise.resolve(context.params);
+    const session = await requireSession(sessionId);
+    const body = await safeParseJson<unknown>(request);
+    const parsed = codingAgentIngestBodySchema.safeParse(body);
+
+    if (!parsed.success) {
+      return jsonResponse({ error: 'Invalid request body', details: parsed.error.flatten() }, 400);
+    }
+
+    const ingestion = await ingestCodingAgentAnswers(
+      session,
+      parsed.data.answers,
+      JSON.stringify(parsed.data),
+    );
+
+    return jsonResponse({
+      sessionId,
+      accepted: ingestion.accepted,
+      status: 'ingested',
+      source: 'coding_agent',
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to ingest coding-agent answers';
+    const status = message === 'Session not found' ? 404 : 500;
+
+    return jsonResponse({ error: message }, status);
+  }
+}
