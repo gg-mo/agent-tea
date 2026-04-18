@@ -71,8 +71,15 @@ export async function POST(request: Request, context: ParamsContext) {
       return jsonResponse({ error: error.message }, error.status);
     }
 
-    const message = error instanceof Error ? error.message : 'Failed to ingest encoded payload';
+    const message =
+      error instanceof Error
+        ? error.message
+        : error && typeof error === 'object' && 'message' in error && typeof (error as { message: unknown }).message === 'string'
+          ? (error as { message: string }).message
+          : 'Failed to ingest encoded payload';
     const status = message === 'Session not found' ? 404 : 500;
+
+    console.error('ingest-encoded failed', error);
 
     return jsonResponse({ error: message }, status);
   }
