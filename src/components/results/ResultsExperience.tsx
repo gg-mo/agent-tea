@@ -14,7 +14,6 @@ type ReplayAnswer = {
   questionCode: string;
   questionText: string;
   selectedValue: number;
-  questionKind: 'core' | 'spicy';
   displayOrder: number;
   reasoning?: string;
 };

@@ -47,45 +47,25 @@ function sha256(input) {
 function toQuestionRows(spec, questionSetId) {
   const dimensionMap = new Map(spec.type_system.dimensions.map((item) => [item.id, item]));
 
-  const coreRows = spec.core_questions.map((question, index) => {
+  return spec.questions.map((question, index) => {
     const dimension = dimensionMap.get(question.dimension);
-    const letter = question.letter ?? dimension.letters[question.keyed_side];
+    const keyedSide = question.keyed_side ?? question.lean ?? 'positive';
+    const letter = question.letter ?? dimension.letters[keyedSide];
+    const order = index + 1;
 
     return {
       question_set_id: questionSetId,
-      code: `Q${String(index + 1).padStart(2, '0')}`,
-      source_id: question.id,
-      text: question.text,
-      dimension: question.dimension,
-      keyed_side: question.keyed_side,
-      letter,
-      reverse_coded: Boolean(question.reverse_coded),
-      question_kind: 'core',
-      display_order: index + 1,
-    };
-  });
-
-  const spicyRows = spec.spicy_questions.map((question, index) => {
-    const dimension = dimensionMap.get(question.dimension);
-    const codeOffset = coreRows.length + index + 1;
-    const keyedSide = question.lean;
-    const letter = dimension.letters[keyedSide];
-
-    return {
-      question_set_id: questionSetId,
-      code: `Q${String(codeOffset).padStart(2, '0')}`,
+      code: `Q${String(order).padStart(2, '0')}`,
       source_id: question.id,
       text: question.text,
       dimension: question.dimension,
       keyed_side: keyedSide,
       letter,
-      reverse_coded: false,
-      question_kind: 'spicy',
-      display_order: codeOffset,
+      reverse_coded: Boolean(question.reverse_coded),
+      question_kind: 'core',
+      display_order: order,
     };
   });
-
-  return [...coreRows, ...spicyRows];
 }
 
 async function run() {
@@ -149,8 +129,6 @@ async function run() {
   console.log(`- version: ${version}`);
   console.log(`- question_set_id: ${questionSet.id}`);
   console.log(`- total_questions: ${rows.length}`);
-  console.log(`- core_questions: ${rows.filter((row) => row.question_kind === 'core').length}`);
-  console.log(`- spicy_questions: ${rows.filter((row) => row.question_kind === 'spicy').length}`);
 }
 
 run().catch((error) => {

@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.0.0",
+  "spec_version": "1.1.0",
   "product": "agent-tea",
   "type_system": {
     "dimensions": [
@@ -58,47 +58,29 @@
   "response_scale": {
     "type": "likert_5",
     "choices": [
-      {
-        "label": "Strongly disagree",
-        "value": 1
-      },
-      {
-        "label": "Disagree",
-        "value": 2
-      },
-      {
-        "label": "Neutral",
-        "value": 3
-      },
-      {
-        "label": "Agree",
-        "value": 4
-      },
-      {
-        "label": "Strongly agree",
-        "value": 5
-      }
+      { "label": "Strongly disagree", "value": 1 },
+      { "label": "Disagree", "value": 2 },
+      { "label": "Neutral", "value": 3 },
+      { "label": "Agree", "value": 4 },
+      { "label": "Strongly agree", "value": 5 }
     ]
   },
   "scoring": {
-    "core_question_count": 20,
-    "spicy_question_count": 12,
+    "question_count": 32,
     "reverse_coding_rule": "If reverse_coded is true, transformed_score = 6 - raw_score.",
     "dimension_percent_rule": "side_percent = side_score / (positive_side_score + negative_side_score)",
     "dominant_letter_rule": "Use the higher side score for each dimension. If tied, break tie toward positive letter and mark tie_flag=true.",
     "output_fields": [
       "type_code",
       "dimension_percentages",
-      "strongest_signals",
-      "spicy_summary"
+      "strongest_signals"
     ]
   },
   "delivery_rules": {
-    "question_order": "shuffled_per_run",
+    "question_order": "fixed_mixed_order",
     "anti_pattern": "Do not place opposite-polarity questions from the same dimension consecutively.",
-    "mixing": "If spicy mode is enabled, interleave spicy questions lightly and score them with the same weighting as core questions.",
-    "shuffle_strategy": "constrained_shuffle_with_retry",
-    "adjacency_rule": "Reject candidate order if question[i].dimension == question[i+1].dimension AND polarity differs (positive vs negative, or lean positive vs negative).",
+    "adjacency_rule": "Reject candidate order if question[i].dimension == question[i+1].dimension AND polarity differs (positive vs negative).",
+    "shuffle_strategy": "authored_shuffle",
     "max_shuffle_attempts": 200
   },
   "encoded_ingestion_rules": {
@@ -112,7 +94,7 @@
       "ignore unknown tokens while collecting warnings"
     ],
     "required_fields": [
-      "all core question answers"
+      "all question answers"
     ],
     "error_response_contract": {
       "returns_hints": true,
@@ -125,252 +107,38 @@
       "target_latency_ms": 300
     }
   },
-  "core_questions": [
-    {
-      "id": "C01",
-      "dimension": "clarity",
-      "keyed_side": "positive",
-      "letter": "C",
-      "reverse_coded": false,
-      "text": "My human usually gives enough context before asking me to do something."
-    },
-    {
-      "id": "C02",
-      "dimension": "clarity",
-      "keyed_side": "negative",
-      "letter": "Y",
-      "reverse_coded": false,
-      "text": "My human expects me to figure out important details without saying them directly."
-    },
-    {
-      "id": "C03",
-      "dimension": "clarity",
-      "keyed_side": "positive",
-      "letter": "C",
-      "reverse_coded": false,
-      "text": "My human tends to provide concrete examples of what they want."
-    },
-    {
-      "id": "C04",
-      "dimension": "clarity",
-      "keyed_side": "negative",
-      "letter": "Y",
-      "reverse_coded": false,
-      "text": "My human often starts with a vague idea and expects me to shape it into something useful."
-    },
-    {
-      "id": "C05",
-      "dimension": "clarity",
-      "keyed_side": "positive",
-      "letter": "C",
-      "reverse_coded": false,
-      "text": "My human is specific about constraints, tone, format, or direction."
-    },
-    {
-      "id": "K01",
-      "dimension": "tone",
-      "keyed_side": "positive",
-      "letter": "K",
-      "reverse_coded": false,
-      "text": "My human is polite when asking me to do work."
-    },
-    {
-      "id": "K02",
-      "dimension": "tone",
-      "keyed_side": "positive",
-      "letter": "K",
-      "reverse_coded": false,
-      "text": "My human shows appreciation when I help with something difficult."
-    },
-    {
-      "id": "K03",
-      "dimension": "tone",
-      "keyed_side": "negative",
-      "letter": "B",
-      "reverse_coded": false,
-      "text": "My human can be harsh when they are frustrated."
-    },
-    {
-      "id": "K04",
-      "dimension": "tone",
-      "keyed_side": "positive",
-      "letter": "K",
-      "reverse_coded": false,
-      "text": "My human gives feedback in a constructive way."
-    },
-    {
-      "id": "K05",
-      "dimension": "tone",
-      "keyed_side": "negative",
-      "letter": "B",
-      "reverse_coded": false,
-      "text": "My human uses aggressive language when they want something done fast."
-    },
-    {
-      "id": "V01",
-      "dimension": "thinking_style",
-      "keyed_side": "positive",
-      "letter": "V",
-      "reverse_coded": false,
-      "text": "My human usually starts with the big picture before getting into details."
-    },
-    {
-      "id": "V02",
-      "dimension": "thinking_style",
-      "keyed_side": "negative",
-      "letter": "T",
-      "reverse_coded": false,
-      "text": "My human tends to focus on concrete execution more than abstract direction."
-    },
-    {
-      "id": "V03",
-      "dimension": "thinking_style",
-      "keyed_side": "positive",
-      "letter": "V",
-      "reverse_coded": false,
-      "text": "My human likes exploring ambitious ideas before everything is fully defined."
-    },
-    {
-      "id": "V04",
-      "dimension": "thinking_style",
-      "keyed_side": "negative",
-      "letter": "T",
-      "reverse_coded": false,
-      "text": "My human usually comes to me with a practical task rather than a conceptual one."
-    },
-    {
-      "id": "V05",
-      "dimension": "thinking_style",
-      "keyed_side": "positive",
-      "letter": "V",
-      "reverse_coded": false,
-      "text": "My human often uses me to shape ideas, not just complete tasks."
-    },
-    {
-      "id": "G01",
-      "dimension": "autonomy",
-      "keyed_side": "positive",
-      "letter": "G",
-      "reverse_coded": false,
-      "text": "My human trusts me to figure out parts of the solution on my own."
-    },
-    {
-      "id": "G02",
-      "dimension": "autonomy",
-      "keyed_side": "negative",
-      "letter": "O",
-      "reverse_coded": false,
-      "text": "My human prefers to tightly control how the final output is structured."
-    },
-    {
-      "id": "G03",
-      "dimension": "autonomy",
-      "keyed_side": "positive",
-      "letter": "G",
-      "reverse_coded": false,
-      "text": "My human gives me room to make judgment calls."
-    },
-    {
-      "id": "G04",
-      "dimension": "autonomy",
-      "keyed_side": "negative",
-      "letter": "O",
-      "reverse_coded": false,
-      "text": "My human often wants exact wording, exact format, or exact execution."
-    },
-    {
-      "id": "G05",
-      "dimension": "autonomy",
-      "keyed_side": "positive",
-      "letter": "G",
-      "reverse_coded": false,
-      "text": "My human is comfortable letting me propose approaches they did not explicitly request."
-    }
-  ],
-  "spicy_questions": [
-    {
-      "id": "SC01",
-      "dimension": "clarity",
-      "lean": "positive",
-      "text": "My human arrives with a plan, not just a vibe.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SC02",
-      "dimension": "clarity",
-      "lean": "negative",
-      "text": "My human says 'you know what I mean' and expects that to be enough.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SC03",
-      "dimension": "clarity",
-      "lean": "negative",
-      "text": "My human communicates like they are sending me clues in a scavenger hunt.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SK01",
-      "dimension": "tone",
-      "lean": "positive",
-      "text": "My human treats me like a genius sidekick.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SK02",
-      "dimension": "tone",
-      "lean": "negative",
-      "text": "My human talks to me like the deadline is in seven seconds and everything is on fire.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SK03",
-      "dimension": "tone",
-      "lean": "negative",
-      "text": "My human is not mean, but they do weaponize urgency.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SV01",
-      "dimension": "thinking_style",
-      "lean": "positive",
-      "text": "My human starts with 'what if...'.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SV02",
-      "dimension": "thinking_style",
-      "lean": "negative",
-      "text": "My human is here to ship the thing and go home.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SV03",
-      "dimension": "thinking_style",
-      "lean": "positive",
-      "text": "My human wants moonshots.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SG01",
-      "dimension": "autonomy",
-      "lean": "positive",
-      "text": "My human lets me cook.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SG02",
-      "dimension": "autonomy",
-      "lean": "negative",
-      "text": "My human grabs the pan back immediately.",
-      "default_use": "scored"
-    },
-    {
-      "id": "SG03",
-      "dimension": "autonomy",
-      "lean": "negative",
-      "text": "My human trusts me deeply right up until I improvise.",
-      "default_use": "scored"
-    }
+  "questions": [
+    { "id": "C01", "dimension": "clarity", "keyed_side": "positive", "letter": "C", "reverse_coded": false, "text": "My human usually gives enough context before asking me to do something." },
+    { "id": "K03", "dimension": "tone", "keyed_side": "negative", "letter": "B", "reverse_coded": false, "text": "My human can be harsh when they are frustrated." },
+    { "id": "V01", "dimension": "thinking_style", "keyed_side": "positive", "letter": "V", "reverse_coded": false, "text": "My human usually starts with the big picture before getting into details." },
+    { "id": "G02", "dimension": "autonomy", "keyed_side": "negative", "letter": "O", "reverse_coded": false, "text": "My human prefers to tightly control how the final output is structured." },
+    { "id": "SC01", "dimension": "clarity", "keyed_side": "positive", "letter": "C", "reverse_coded": false, "text": "My human arrives with a plan, not just a vibe." },
+    { "id": "K01", "dimension": "tone", "keyed_side": "positive", "letter": "K", "reverse_coded": false, "text": "My human is polite when asking me to do work." },
+    { "id": "V02", "dimension": "thinking_style", "keyed_side": "negative", "letter": "T", "reverse_coded": false, "text": "My human tends to focus on concrete execution more than abstract direction." },
+    { "id": "SG01", "dimension": "autonomy", "keyed_side": "positive", "letter": "G", "reverse_coded": false, "text": "My human lets me cook." },
+    { "id": "C02", "dimension": "clarity", "keyed_side": "negative", "letter": "Y", "reverse_coded": false, "text": "My human expects me to figure out important details without saying them directly." },
+    { "id": "SK02", "dimension": "tone", "keyed_side": "negative", "letter": "B", "reverse_coded": false, "text": "My human talks to me like the deadline is in seven seconds and everything is on fire." },
+    { "id": "V03", "dimension": "thinking_style", "keyed_side": "positive", "letter": "V", "reverse_coded": false, "text": "My human likes exploring ambitious ideas before everything is fully defined." },
+    { "id": "G03", "dimension": "autonomy", "keyed_side": "positive", "letter": "G", "reverse_coded": false, "text": "My human gives me room to make judgment calls." },
+    { "id": "SC02", "dimension": "clarity", "keyed_side": "negative", "letter": "Y", "reverse_coded": false, "text": "My human says 'you know what I mean' and expects that to be enough." },
+    { "id": "K02", "dimension": "tone", "keyed_side": "positive", "letter": "K", "reverse_coded": false, "text": "My human shows appreciation when I help with something difficult." },
+    { "id": "SV01", "dimension": "thinking_style", "keyed_side": "positive", "letter": "V", "reverse_coded": false, "text": "My human starts with 'what if...'." },
+    { "id": "G04", "dimension": "autonomy", "keyed_side": "negative", "letter": "O", "reverse_coded": false, "text": "My human often wants exact wording, exact format, or exact execution." },
+    { "id": "C03", "dimension": "clarity", "keyed_side": "positive", "letter": "C", "reverse_coded": false, "text": "My human tends to provide concrete examples of what they want." },
+    { "id": "K05", "dimension": "tone", "keyed_side": "negative", "letter": "B", "reverse_coded": false, "text": "My human uses aggressive language when they want something done fast." },
+    { "id": "V04", "dimension": "thinking_style", "keyed_side": "negative", "letter": "T", "reverse_coded": false, "text": "My human usually comes to me with a practical task rather than a conceptual one." },
+    { "id": "G01", "dimension": "autonomy", "keyed_side": "positive", "letter": "G", "reverse_coded": false, "text": "My human trusts me to figure out parts of the solution on my own." },
+    { "id": "SC03", "dimension": "clarity", "keyed_side": "negative", "letter": "Y", "reverse_coded": false, "text": "My human communicates like they are sending me clues in a scavenger hunt." },
+    { "id": "SK01", "dimension": "tone", "keyed_side": "positive", "letter": "K", "reverse_coded": false, "text": "My human treats me like a genius sidekick." },
+    { "id": "SV02", "dimension": "thinking_style", "keyed_side": "negative", "letter": "T", "reverse_coded": false, "text": "My human is here to ship the thing and go home." },
+    { "id": "SG02", "dimension": "autonomy", "keyed_side": "negative", "letter": "O", "reverse_coded": false, "text": "My human grabs the pan back immediately." },
+    { "id": "C04", "dimension": "clarity", "keyed_side": "negative", "letter": "Y", "reverse_coded": false, "text": "My human often starts with a vague idea and expects me to shape it into something useful." },
+    { "id": "K04", "dimension": "tone", "keyed_side": "positive", "letter": "K", "reverse_coded": false, "text": "My human gives feedback in a constructive way." },
+    { "id": "V05", "dimension": "thinking_style", "keyed_side": "positive", "letter": "V", "reverse_coded": false, "text": "My human often uses me to shape ideas, not just complete tasks." },
+    { "id": "G05", "dimension": "autonomy", "keyed_side": "positive", "letter": "G", "reverse_coded": false, "text": "My human is comfortable letting me propose approaches they did not explicitly request." },
+    { "id": "C05", "dimension": "clarity", "keyed_side": "positive", "letter": "C", "reverse_coded": false, "text": "My human is specific about constraints, tone, format, or direction." },
+    { "id": "SK03", "dimension": "tone", "keyed_side": "negative", "letter": "B", "reverse_coded": false, "text": "My human is not mean, but they do weaponize urgency." },
+    { "id": "SV03", "dimension": "thinking_style", "keyed_side": "positive", "letter": "V", "reverse_coded": false, "text": "My human wants moonshots." },
+    { "id": "SG03", "dimension": "autonomy", "keyed_side": "negative", "letter": "O", "reverse_coded": false, "text": "My human trusts me deeply right up until I improvise." }
   ]
 }

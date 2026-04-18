@@ -4,16 +4,16 @@ import { scoreSession } from '@/lib/scoring/score-session';
 import type { QuestionDefinition, SessionAnswer } from '@/lib/scoring/types';
 
 const questionBank: QuestionDefinition[] = [
-  { code: 'Q01', dimension: 'clarity', keyedSide: 'positive', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q02', dimension: 'clarity', keyedSide: 'negative', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q03', dimension: 'tone', keyedSide: 'positive', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q04', dimension: 'tone', keyedSide: 'negative', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q05', dimension: 'thinking_style', keyedSide: 'positive', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q06', dimension: 'thinking_style', keyedSide: 'negative', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q07', dimension: 'autonomy', keyedSide: 'positive', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q08', dimension: 'autonomy', keyedSide: 'negative', reverseCoded: false, questionKind: 'core' },
-  { code: 'Q21', dimension: 'clarity', keyedSide: 'negative', reverseCoded: false, questionKind: 'spicy' },
-  { code: 'Q22', dimension: 'tone', keyedSide: 'positive', reverseCoded: true, questionKind: 'spicy' },
+  { code: 'Q01', dimension: 'clarity', keyedSide: 'positive', reverseCoded: false },
+  { code: 'Q02', dimension: 'clarity', keyedSide: 'negative', reverseCoded: false },
+  { code: 'Q03', dimension: 'tone', keyedSide: 'positive', reverseCoded: false },
+  { code: 'Q04', dimension: 'tone', keyedSide: 'negative', reverseCoded: false },
+  { code: 'Q05', dimension: 'thinking_style', keyedSide: 'positive', reverseCoded: false },
+  { code: 'Q06', dimension: 'thinking_style', keyedSide: 'negative', reverseCoded: false },
+  { code: 'Q07', dimension: 'autonomy', keyedSide: 'positive', reverseCoded: false },
+  { code: 'Q08', dimension: 'autonomy', keyedSide: 'negative', reverseCoded: false },
+  { code: 'Q21', dimension: 'clarity', keyedSide: 'negative', reverseCoded: false },
+  { code: 'Q22', dimension: 'tone', keyedSide: 'positive', reverseCoded: true },
 ];
 
 describe('scoreSession', () => {
@@ -47,7 +47,7 @@ describe('scoreSession', () => {
     expect(result.dimensionBreakdown.tone.dominantLetter).toBe('K');
   });
 
-  it('weights spicy and core answers equally', () => {
+  it('weights every answer equally regardless of order', () => {
     const coreOnly = scoreSession({
       questions: questionBank,
       answers: [{ questionCode: 'Q01', value: 3 }],
