@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import Home from './page';
 
@@ -24,7 +24,7 @@ describe('Home page', () => {
     expect(screen.getByRole('heading', { name: /coding agents/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /chatbots/i })).toBeInTheDocument();
     expect(screen.getByText(/\/instructions\/coding-agent\.md/i)).toBeInTheDocument();
-    expect(screen.getByText(/\/instructions\/chatbot\.md/i)).toBeInTheDocument();
+    expect(screen.getByText(/your chatbot has notes on you/i)).toBeInTheDocument();
   });
 
   it('renders a clear call to action for first-time users', () => {
@@ -33,7 +33,7 @@ describe('Home page', () => {
     expect(screen.getByRole('button', { name: /see what your ai thinks of you/i })).toBeInTheDocument();
   });
 
-  it('reveals chatbot encoded input only after copying chatbot instruction', () => {
+  it('reveals chatbot encoded input only after copying chatbot instruction', async () => {
     render(<Home />);
     Object.assign(navigator, {
       clipboard: {
@@ -44,11 +44,13 @@ describe('Home page', () => {
     fireEvent.click(screen.getByRole('button', { name: /see what your ai thinks of you/i }));
 
     expect(screen.queryByLabelText(/drop in your chatbot/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /copy chatbot instruction/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /copy chatbot prompt/i })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('heading', { name: /chatbots/i }));
-    fireEvent.click(screen.getByRole('button', { name: /copy chatbot instruction/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^copy chatbot prompt$/i }));
 
-    expect(screen.getByLabelText(/drop in your chatbot/i)).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByLabelText(/drop in your chatbot/i)).toBeInTheDocument(),
+    );
   });
 });
