@@ -9,7 +9,7 @@ No signup wall. No profile setup. No tutorial maze.
 1. User lands on homepage
 2. Picks agent type (`Coding Agent` or `Chatbot`)
 3. Copies provided prompt/markdown
-4. Pastes agent output
+4. Pastes encoded agent output (chatbots like chatgpt, gemini, doubao) or have sent cURL requests with coding agents (like codex, claude code, etc)
 5. Sees results immediately
 6. Optional: save/share/retake
 
