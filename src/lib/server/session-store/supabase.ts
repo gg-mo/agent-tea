@@ -59,7 +59,7 @@ export const supabaseSessionStore: SessionStore = {
     const { data, error } = await client
       .from('questions')
       .select(
-        'code, source_id, text, dimension, keyed_side, letter, reverse_coded, question_kind, display_order',
+        'code, source_id, text, dimension, keyed_side, letter, reverse_coded, display_order',
       )
       .eq('question_set_id', questionSetId)
       .order('display_order', { ascending: true });
@@ -76,7 +76,6 @@ export const supabaseSessionStore: SessionStore = {
       keyedSide: row.keyed_side,
       letter: row.letter,
       reverseCoded: row.reverse_coded,
-      questionKind: row.question_kind,
       displayOrder: row.display_order,
     })) as QuestionRow[];
   },

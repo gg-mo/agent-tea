@@ -40,8 +40,13 @@ describe('phase 1 session API', () => {
   it('accepts forgiving encoded payload and returns normalized output', async () => {
     const { payload: sessionPayload } = await createSession('chatbot');
 
-    const encoded =
-      'AT1|q1:5aq2=4aq3_3aq4-2aq5-1aq6-5aq7-4aq8-3aq9-2aq10-1aq11-5aq12-4aq13-3aq14-2aq15-1aq16-5aq17-4aq18-3aq19-2aq20-1';
+    const tokens: string[] = [];
+    for (let i = 1; i <= 32; i += 1) {
+      const code = `q${i}`;
+      const value = ((i - 1) % 5) + 1;
+      tokens.push(`${code}-${value}`);
+    }
+    const encoded = `AT1|${tokens.join('a')}`;
 
     const response = await encodedPost(
       new Request(`http://localhost/api/sessions/${sessionPayload.sessionId}/ingest-encoded`, {
@@ -56,7 +61,7 @@ describe('phase 1 session API', () => {
 
     expect(response.status).toBe(200);
     expect(data.ok).toBe(true);
-    expect(data.accepted).toBe(20);
+    expect(data.accepted).toBe(32);
     expect(data.normalizedPayload).toContain('AT1|');
   });
 
@@ -88,12 +93,13 @@ describe('phase 1 session API', () => {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          answers: [
-            { questionCode: 'Q01', value: 5, reasoning: 'There was a time my human gave me clear constraints.' },
-            { questionCode: 'Q02', value: 1 },
-            { questionCode: 'Q03', value: 5 },
-            { questionCode: 'Q04', value: 1 },
-          ],
+          answers: Array.from({ length: 32 }, (_, i) => ({
+            questionCode: `Q${String(i + 1).padStart(2, '0')}`,
+            value: ((i % 5) + 1),
+            ...(i === 0
+              ? { reasoning: 'There was a time my human gave me clear constraints.' }
+              : {}),
+          })),
         }),
       }),
       { params: { sessionId: sessionPayload.sessionId } },

@@ -23,10 +23,8 @@ The scripts automatically load `.env.local` (or `.env`) before running, so manua
 1. Reads `spec_version` from the JSON file.
 2. Upserts a `question_sets` record by `version`.
 3. Marks the ingested version as active (`is_active=true`) and deactivates older sets.
-4. Upserts all core and spicy questions into `questions` with generated canonical codes:
-   - Core: `Q01` to `Q20`
-   - Spicy: `Q21+`
-5. Preserves scoring metadata (`dimension`, `keyed_side`, `reverse_coded`, `question_kind`, `letter`).
+4. Upserts every question in the unified `questions` array into `questions` with generated canonical codes `Q01`–`QNN` in the authored order.
+5. Preserves scoring metadata (`dimension`, `keyed_side`, `reverse_coded`, `letter`).
 
 ## Versioning Workflow
 

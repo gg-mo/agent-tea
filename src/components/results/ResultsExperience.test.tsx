@@ -66,7 +66,6 @@ const baseResult = {
       questionCode: 'Q01',
       questionText: 'My human usually gives enough context.',
       selectedValue: 5,
-      questionKind: 'core' as const,
       displayOrder: 1,
       reasoning: 'There was a time my human gave me exact constraints.',
     },

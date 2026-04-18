@@ -53,7 +53,7 @@ async function run() {
 
   const { data: questions, error: questionError } = await supabase
     .from('questions')
-    .select('dimension, question_kind')
+    .select('dimension')
     .eq('question_set_id', activeSet.id);
 
   if (questionError) {
@@ -61,7 +61,7 @@ async function run() {
   }
 
   const counts = questions.reduce((acc, question) => {
-    const key = `${question.dimension}:${question.question_kind}`;
+    const key = question.dimension;
     acc[key] = (acc[key] ?? 0) + 1;
     return acc;
   }, {});

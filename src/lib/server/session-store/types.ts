@@ -12,7 +12,6 @@ export type QuestionRow = {
   keyedSide: QuestionSide;
   letter: string;
   reverseCoded: boolean;
-  questionKind: 'core' | 'spicy';
   displayOrder: number;
 };
 

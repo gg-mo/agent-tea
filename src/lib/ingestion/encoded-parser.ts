@@ -37,7 +37,7 @@ function toToken(rawToken: string): string {
 
 export function parseEncodedAnswers(params: {
   payload: string;
-  requiredCoreQuestionCodes: string[];
+  requiredQuestionCodes: string[];
 }): EncodedParseResult {
   const warnings: string[] = [];
   const hints: ParseHint[] = [];
@@ -120,11 +120,11 @@ export function parseEncodedAnswers(params: {
     answers.set(questionCode, value);
   }
 
-  for (const requiredCode of params.requiredCoreQuestionCodes) {
+  for (const requiredCode of params.requiredQuestionCodes) {
     if (!answers.has(requiredCode)) {
       hints.push({
         token: requiredCode,
-        errorCode: 'MISSING_CORE_ANSWER',
+        errorCode: 'MISSING_ANSWER',
         message: `${requiredCode} is required for scoring.`,
         suggestedFix: `Add ${requiredCode}-<1..5> to the payload.`,
       });

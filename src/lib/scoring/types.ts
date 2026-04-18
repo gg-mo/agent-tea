@@ -2,14 +2,11 @@ export type DimensionId = 'clarity' | 'tone' | 'thinking_style' | 'autonomy';
 
 export type QuestionSide = 'positive' | 'negative';
 
-export type QuestionKind = 'core' | 'spicy';
-
 export type QuestionDefinition = {
   code: string;
   dimension: DimensionId;
   keyedSide: QuestionSide;
   reverseCoded: boolean;
-  questionKind: QuestionKind;
 };
 
 export type SessionAnswer = {

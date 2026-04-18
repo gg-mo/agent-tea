@@ -27,8 +27,7 @@ type QuestionSpec = {
   type_system: {
     dimensions: SpecDimension[];
   };
-  core_questions: SpecQuestion[];
-  spicy_questions: SpecQuestion[];
+  questions: SpecQuestion[];
 };
 
 export type BundledQuestionSet = {
@@ -53,29 +52,11 @@ export function getBundledQuestionSet(): BundledQuestionSet {
   const spec = readSpecFile();
   const dimensionMap = new Map(spec.type_system.dimensions.map((item) => [item.id, item]));
 
-  const coreQuestions: QuestionRow[] = spec.core_questions.map((question, index) => {
+  const questions: QuestionRow[] = spec.questions.map((question, index) => {
     const dimension = dimensionMap.get(question.dimension);
-    const keyedSide = question.keyed_side ?? 'positive';
+    const keyedSide = question.keyed_side ?? question.lean ?? 'positive';
     const letter = question.letter ?? dimension?.letters[keyedSide] ?? '';
-
-    return {
-      code: `Q${String(index + 1).padStart(2, '0')}`,
-      sourceId: question.id,
-      text: question.text,
-      dimension: question.dimension,
-      keyedSide,
-      letter,
-      reverseCoded: Boolean(question.reverse_coded),
-      questionKind: 'core',
-      displayOrder: index + 1,
-    };
-  });
-
-  const spicyQuestions: QuestionRow[] = spec.spicy_questions.map((question, index) => {
-    const dimension = dimensionMap.get(question.dimension);
-    const keyedSide = question.lean ?? 'positive';
-    const letter = dimension?.letters[keyedSide] ?? '';
-    const order = coreQuestions.length + index + 1;
+    const order = index + 1;
 
     return {
       code: `Q${String(order).padStart(2, '0')}`,
@@ -84,8 +65,7 @@ export function getBundledQuestionSet(): BundledQuestionSet {
       dimension: question.dimension,
       keyedSide,
       letter,
-      reverseCoded: false,
-      questionKind: 'spicy',
+      reverseCoded: Boolean(question.reverse_coded),
       displayOrder: order,
     };
   });
@@ -93,7 +73,7 @@ export function getBundledQuestionSet(): BundledQuestionSet {
   cache = {
     id: `bundled-${spec.spec_version}`,
     version: spec.spec_version,
-    questions: [...coreQuestions, ...spicyQuestions],
+    questions,
   };
 
   return cache;

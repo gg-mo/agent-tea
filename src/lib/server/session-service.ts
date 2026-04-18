@@ -32,7 +32,6 @@ export type SessionQuestionPayload = {
   text: string;
   dimension: QuestionRow['dimension'];
   keyedSide: QuestionRow['keyedSide'];
-  questionKind: QuestionRow['questionKind'];
 };
 
 function normalizeAnswerValue(raw: number, reverseCoded: boolean) {
@@ -45,7 +44,6 @@ function mapQuestionsToScoring(questions: QuestionRow[]) {
     dimension: question.dimension,
     keyedSide: question.keyedSide,
     reverseCoded: question.reverseCoded,
-    questionKind: question.questionKind,
   }));
 }
 
@@ -263,7 +261,6 @@ export async function createSession(params: {
       text: question.text,
       dimension: question.dimension,
       keyedSide: question.keyedSide,
-      questionKind: question.questionKind,
     })) satisfies SessionQuestionPayload[],
   };
 }
@@ -322,6 +319,13 @@ export async function ingestCodingAgentAnswers(
   rawPayload: string,
 ) {
   const store = getSessionStore();
+  const questions = await store.getQuestions(session.questionSetId);
+  const providedCodes = new Set(answers.map((a) => a.questionCode));
+  const missing = questions.map((q) => q.code).filter((code) => !providedCodes.has(code));
+
+  if (missing.length > 0) {
+    throw new Error(`Missing required answers: ${missing.join(', ')}`);
+  }
 
   const ingestion = await upsertNormalizedAnswers(session, answers, 'coding_agent');
 
@@ -341,11 +345,9 @@ export async function ingestCodingAgentAnswers(
 export async function ingestEncodedPayload(session: SessionRow, payload: string) {
   const store = getSessionStore();
   const questions = await store.getQuestions(session.questionSetId);
-  const requiredCoreQuestionCodes = questions
-    .filter((question) => question.questionKind === 'core')
-    .map((question) => question.code);
+  const requiredQuestionCodes = questions.map((question) => question.code);
 
-  const parsed = parseEncodedAnswers({ payload, requiredCoreQuestionCodes });
+  const parsed = parseEncodedAnswers({ payload, requiredQuestionCodes });
 
   if (!parsed.ok) {
     await store.recordInstructionRun({
@@ -447,7 +449,6 @@ export async function getSessionResultById(sessionId: string) {
         questionCode: answer.questionCode,
         questionText: question?.text ?? answer.questionCode,
         selectedValue: answer.rawValue,
-        questionKind: question?.questionKind ?? 'core',
         displayOrder: question?.displayOrder ?? Number.MAX_SAFE_INTEGER,
         reasoning: answer.reasoning,
       };
@@ -591,7 +592,6 @@ export async function getCompareSetResults(compareSetId: string) {
           questionCode: answer.questionCode,
           questionText: question?.text ?? answer.questionCode,
           selectedValue: answer.rawValue,
-          questionKind: question?.questionKind ?? 'core',
           displayOrder: question?.displayOrder ?? Number.MAX_SAFE_INTEGER,
           reasoning: answer.reasoning,
         };
