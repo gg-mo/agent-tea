@@ -15,7 +15,9 @@ type DecodeState = {
 
 type CodingFlowState = 'idle' | 'creating' | 'waiting' | 'error';
 
-const chatbotInstruction = 'follow the instruction in this file: /instructions/chatbot.md';
+function buildChatbotInstruction(origin: string) {
+  return `follow the instruction in this file: ${origin}/instructions/chatbot.md`;
+}
 
 function getReferralContext() {
   const referralCode = localStorage.getItem('agentTeaReferral') ?? undefined;
@@ -33,6 +35,15 @@ export function LandingEntryCards() {
   const [codingSessionId, setCodingSessionId] = useState<string | null>(null);
   const [codingFlowState, setCodingFlowState] = useState<CodingFlowState>('idle');
   const [codingFlowMessage, setCodingFlowMessage] = useState<string | null>(null);
+  const [origin, setOrigin] = useState('');
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  const codingInstructionUrl = origin ? `${origin}/instructions/coding-agent.md` : '/instructions/coding-agent.md';
+  const chatbotInstructionUrl = origin ? `${origin}/instructions/chatbot.md` : '/instructions/chatbot.md';
+  const chatbotInstruction = buildChatbotInstruction(origin);
 
   useEffect(() => {
     if (!codingSessionId || selectedMode !== 'coding') {
@@ -238,7 +249,7 @@ export function LandingEntryCards() {
   }
 
   return (
-    <section className="grid gap-4 lg:grid-cols-2">
+    <section className="tea-stagger grid gap-5 lg:grid-cols-2">
       <article
         onClick={() => {
           if (selectedMode === 'coding') {
@@ -249,30 +260,36 @@ export function LandingEntryCards() {
           setSelectedMode('coding');
           setShowChatbotPanel(false);
         }}
-        className={`tea-card relative overflow-hidden rounded-3xl border p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_16px_40px_-16px_rgba(255,152,69,0.45)] ${
+        className={`tea-card relative overflow-hidden rounded-[28px] border p-7 backdrop-blur-xl transition-all ${
           selectedMode === 'coding'
-            ? 'border-orange-200/70 bg-orange-400/20 shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_28px_56px_-18px_rgba(255,152,69,0.65)]'
+            ? 'border-white/[0.16] bg-white/[0.05] shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_30px_70px_-30px_rgba(251,146,60,0.45)]'
             : selectedMode === 'chatbot'
-              ? 'cursor-pointer border-orange-300/25 bg-orange-400/5 opacity-60'
-              : 'cursor-pointer border-orange-300/40 bg-orange-400/10 hover:border-orange-200/60'
+              ? 'cursor-pointer border-white/[0.06] bg-white/[0.02] opacity-45'
+              : 'cursor-pointer border-white/[0.08] bg-white/[0.03] hover:border-white/[0.14] hover:bg-white/[0.05]'
         }`}
       >
         <LobsterMascot
           variant="card"
-          className="pointer-events-none absolute -right-6 -top-8 w-28 rotate-6 opacity-35"
+          className="pointer-events-none absolute -right-6 -top-8 w-24 rotate-6 opacity-20"
         />
-        <h2 className="text-xl font-bold text-orange-100">Coding Agents</h2>
-        <p className="mt-2 text-base font-semibold text-orange-50">I have a coding agent!</p>
+        <h2 className="tea-eyebrow text-orange-200/80">Coding Agents</h2>
+        <p className="tea-headline mt-3 text-[1.5rem] text-white">I have a coding agent.</p>
 
         {selectedMode === 'coding' ? (
-          <div className="tea-rise-in mt-4">
-            <p className="text-sm leading-6 text-orange-50/85">
-              Copy one tiny instruction, hand it to your agent, and your reveal opens the moment it replies.
+          <div className="tea-lines mt-5">
+            <p className="text-[0.95rem] leading-[1.6] text-slate-300/90">
+              Copy one instruction, hand it to your agent. Your reveal opens the moment it replies.
             </p>
-            <code className="mt-3 block rounded-2xl border border-orange-200/30 bg-black/30 px-3 py-2 text-xs text-orange-50">
-              follow instructions in /instructions/coding-agent.md
-            </code>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <a
+              href={codingInstructionUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(event) => event.stopPropagation()}
+              className="mt-4 block truncate rounded-xl border border-white/[0.08] bg-black/30 px-3 py-2 font-mono text-[0.78rem] text-orange-100/85 underline-offset-2 hover:underline"
+            >
+              {codingInstructionUrl}
+            </a>
+            <div className="mt-5">
               <button
                 type="button"
                 onClick={(event) => {
@@ -280,15 +297,15 @@ export function LandingEntryCards() {
                   void copyCodingInstruction();
                 }}
                 disabled={codingFlowState === 'creating'}
-                className="tea-press inline-flex rounded-xl bg-orange-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-orange-100 disabled:cursor-wait disabled:opacity-75"
+                className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100 disabled:cursor-wait disabled:opacity-75"
               >
-                {codingFlowState === 'creating' ? 'Preparing…' : 'Copy coding instruction'}
+                {codingFlowState === 'creating' ? 'Preparing…' : 'Copy instruction'}
               </button>
             </div>
           </div>
         ) : (
-          <p className="mt-3 text-xs text-orange-100/70">
-            Tap to get the one-line prompt → <span className="font-mono">/instructions/coding-agent.md</span>
+          <p className="mt-4 truncate font-mono text-[0.78rem] text-orange-100/60">
+            {codingInstructionUrl}
           </p>
         )}
       </article>
@@ -302,31 +319,37 @@ export function LandingEntryCards() {
           }
           setSelectedMode('chatbot');
         }}
-        className={`tea-card relative overflow-hidden rounded-3xl border p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_16px_40px_-16px_rgba(22,189,202,0.5)] ${
+        className={`tea-card relative overflow-hidden rounded-[28px] border p-7 backdrop-blur-xl transition-all ${
           selectedMode === 'chatbot'
-            ? 'border-cyan-200/70 bg-cyan-400/20 shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_28px_56px_-18px_rgba(22,189,202,0.65)]'
+            ? 'border-white/[0.16] bg-white/[0.05] shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_30px_70px_-30px_rgba(34,211,238,0.42)]'
             : selectedMode === 'coding'
-              ? 'cursor-pointer border-cyan-300/25 bg-cyan-400/5 opacity-60'
-              : 'cursor-pointer border-cyan-300/45 bg-cyan-400/10 hover:border-cyan-200/65'
+              ? 'cursor-pointer border-white/[0.06] bg-white/[0.02] opacity-45'
+              : 'cursor-pointer border-white/[0.08] bg-white/[0.03] hover:border-white/[0.14] hover:bg-white/[0.05]'
         }`}
       >
         <LobsterMascot
           variant="card"
-          className="pointer-events-none absolute -right-6 -top-8 w-28 -rotate-6 opacity-35"
+          className="pointer-events-none absolute -right-6 -top-8 w-24 -rotate-6 opacity-20"
         />
-        <h2 className="text-xl font-bold text-cyan-100">Chatbots</h2>
-        <p className="mt-2 text-base font-semibold text-cyan-50">I use a chatbot!</p>
+        <h2 className="tea-eyebrow text-cyan-200/80">Chatbots</h2>
+        <p className="tea-headline mt-3 text-[1.5rem] text-white">I use a chatbot.</p>
 
         {selectedMode === 'chatbot' ? (
-          <div className="tea-rise-in mt-4">
-            <p className="text-sm leading-6 text-cyan-50/85">
-              Paste one prompt into ChatGPT, Claude, or Gemini — bring back its short reply and we&apos;ll unlock
+          <div className="tea-lines mt-5">
+            <p className="text-[0.95rem] leading-[1.6] text-slate-300/90">
+              Paste one prompt into ChatGPT, Claude, or Gemini. Bring back its short reply and we&apos;ll unlock
               your reveal.
             </p>
-            <code className="mt-3 block rounded-2xl border border-cyan-200/30 bg-black/30 px-3 py-2 text-xs text-cyan-50">
-              {chatbotInstruction}
-            </code>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <a
+              href={chatbotInstructionUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(event) => event.stopPropagation()}
+              className="mt-4 block truncate rounded-xl border border-white/[0.08] bg-black/30 px-3 py-2 font-mono text-[0.78rem] text-cyan-100/85 underline-offset-2 hover:underline"
+            >
+              {chatbotInstructionUrl}
+            </a>
+            <div className="mt-5">
               <button
                 type="button"
                 onClick={(event) => {
@@ -334,79 +357,64 @@ export function LandingEntryCards() {
                   setShowChatbotPanel(true);
                   void copyText('chatbot', chatbotInstruction);
                 }}
-                className="tea-press inline-flex rounded-xl bg-cyan-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-100"
+                className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100"
               >
                 Copy chatbot instruction
               </button>
             </div>
           </div>
         ) : (
-          <p className="mt-3 text-xs text-cyan-100/70">
-            Tap to get the one-line prompt → <span className="font-mono">/instructions/chatbot.md</span>
+          <p className="mt-4 truncate font-mono text-[0.78rem] text-cyan-100/60">
+            {chatbotInstructionUrl}
           </p>
         )}
       </article>
 
-      {selectedMode === 'coding' && codingSessionId ? (
-        <div className="tea-rise-in lg:col-span-2">
-          <section className="mt-1 rounded-3xl border border-orange-100/35 bg-orange-200/15 p-5 shadow-[0_18px_54px_-24px_rgba(251,146,60,0.7)] ring-1 ring-orange-100/20">
-            <div className="flex items-center gap-3 rounded-2xl border border-orange-100/25 bg-slate-950/45 p-3">
-              <LobsterMascot
-                variant="bubble"
-                className="h-14 w-14 shrink-0 drop-shadow-[0_10px_12px_rgba(251,146,60,0.3)]"
-              />
-              <p className="text-sm text-orange-50/95">
-                Hand the copied instruction to your coding agent. Your reveal opens here automatically the
-                second it replies.
-              </p>
-            </div>
-
-            {codingFlowMessage ? (
-              <p className="tea-toast mt-3 text-sm text-orange-50/95">{codingFlowMessage}</p>
-            ) : null}
-          </section>
-        </div>
+      {selectedMode === 'coding' && codingFlowMessage ? (
+        <p
+          className="tea-toast text-sm text-orange-50/95 lg:col-span-2"
+          role="status"
+          aria-live="polite"
+        >
+          {codingFlowMessage}
+        </p>
       ) : null}
 
       {showChatbotPanel ? (
         <div className="tea-rise-in lg:col-span-2">
-          <section className="mt-1 rounded-3xl border border-cyan-100/40 bg-cyan-200/15 p-5 shadow-[0_18px_54px_-24px_rgba(45,212,191,0.75)] ring-1 ring-cyan-100/20">
-            <div className="mb-4 flex items-center gap-3 rounded-2xl border border-cyan-100/25 bg-slate-950/45 p-3">
-              <LobsterMascot
-                variant="bubble"
-                className="h-14 w-14 shrink-0 drop-shadow-[0_10px_12px_rgba(34,211,238,0.3)]"
-              />
-              <p className="text-sm text-cyan-50/95">
-                Ready when you are. Paste the short reply your chatbot gave you and we&apos;ll open your reveal.
-              </p>
-            </div>
-
-            <label htmlFor="chatbotEncodedPayload" className="text-sm font-semibold text-cyan-100">
-              Paste chatbot encoded answer
+          <section className="rounded-[28px] border border-white/[0.08] bg-white/[0.03] p-7 backdrop-blur-xl">
+            <p className="tea-eyebrow text-cyan-200/80">Paste reply</p>
+            <label
+              htmlFor="chatbotEncodedPayload"
+              className="tea-headline mt-2 block text-[1.25rem] text-white"
+            >
+              Drop in your chatbot&apos;s encoded line
             </label>
             <textarea
               id="chatbotEncodedPayload"
               value={encodedPayload}
               onChange={(event) => setEncodedPayload(event.target.value)}
               placeholder="AT1|Q01-5AQ02-4AQ03-3..."
-              className="mt-2 h-28 w-full rounded-2xl border border-cyan-100/25 bg-slate-950/70 px-3 py-2 text-sm text-cyan-50 outline-none transition focus:border-cyan-200/60"
+              className="tea-press mt-4 h-28 w-full rounded-2xl border border-white/[0.08] bg-black/40 px-4 py-3 font-mono text-[0.85rem] text-slate-100 outline-none focus:border-white/20 focus:bg-black/50"
             />
-            <button
-              type="button"
-              onClick={decodeChatbotPayload}
-              disabled={decodeState.status === 'working'}
-              className="tea-press mt-3 inline-flex rounded-xl bg-cyan-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-100 disabled:cursor-wait disabled:opacity-75"
-            >
-              {decodeState.status === 'working' ? 'Decoding…' : 'Reveal my type'}
-            </button>
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={decodeChatbotPayload}
+                disabled={decodeState.status === 'working'}
+                className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100 disabled:cursor-wait disabled:opacity-75"
+              >
+                {decodeState.status === 'working' ? 'Decoding…' : 'Reveal my type'}
+              </button>
+            </div>
 
             {decodeState.message ? (
               <p
-                className={`tea-toast mt-3 text-sm ${
+                className={`tea-toast mt-4 text-[0.875rem] ${
                   decodeState.status === 'success'
                     ? 'text-emerald-200'
                     : decodeState.status === 'working'
-                      ? 'text-cyan-100'
+                      ? 'text-slate-200'
                       : 'text-rose-200'
                 }`}
                 role="status"
@@ -417,16 +425,15 @@ export function LandingEntryCards() {
             ) : null}
 
             {decodeState.hints && decodeState.hints.length > 0 ? (
-              <ul className="mt-3 space-y-2 text-xs text-cyan-50/90">
+              <ul className="tea-lines mt-4 space-y-2 text-[0.8rem] text-slate-200/90">
                 {decodeState.hints.map((hint, index) => (
                   <li
                     key={`${hint.token}-${index}`}
-                    className="tea-rise-in rounded-xl border border-cyan-100/20 bg-black/20 p-2"
-                    style={{ animationDelay: `${index * 80}ms` }}
+                    className="rounded-xl border border-white/[0.06] bg-black/25 px-3 py-2"
                   >
-                    <p className="font-semibold">{hint.token}</p>
-                    <p>{hint.message}</p>
-                    <p className="text-cyan-200/90">Try: {hint.suggestedFix}</p>
+                    <p className="font-medium text-white">{hint.token}</p>
+                    <p className="text-slate-300/85">{hint.message}</p>
+                    <p className="mt-0.5 text-cyan-200/90">Try: {hint.suggestedFix}</p>
                   </li>
                 ))}
               </ul>
@@ -436,7 +443,7 @@ export function LandingEntryCards() {
       ) : null}
 
       {copyLabel ? (
-        <p className="tea-toast text-xs text-cyan-100 lg:col-span-2" role="status" aria-live="polite">
+        <p className="tea-toast text-[0.8rem] text-slate-300/90 lg:col-span-2" role="status" aria-live="polite">
           {copyLabel}
         </p>
       ) : null}
