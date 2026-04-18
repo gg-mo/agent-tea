@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import Home from './page';
 
@@ -33,13 +33,23 @@ describe('Home page', () => {
     expect(screen.getByRole('button', { name: /see what your ai thinks of you/i })).toBeInTheDocument();
   });
 
-  it('reveals chatbot encoded input only after copying chatbot instruction', () => {
+  it('reveals chatbot encoded input only after copying chatbot instruction', async () => {
     render(<Home />);
     Object.assign(navigator, {
       clipboard: {
         writeText: vi.fn().mockResolvedValue(undefined),
       },
     });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: RequestInfo) => {
+        const url = typeof input === 'string' ? input : input.toString();
+        if (url.endsWith('/instructions/chatbot.md')) {
+          return Promise.resolve(new Response('# Agent Tea — Chatbot Instructions'));
+        }
+        return Promise.resolve(new Response(null, { status: 204 }));
+      }),
+    );
 
     fireEvent.click(screen.getByRole('button', { name: /see what your ai thinks of you/i }));
 
@@ -49,6 +59,8 @@ describe('Home page', () => {
     fireEvent.click(screen.getByRole('heading', { name: /chatbots/i }));
     fireEvent.click(screen.getByRole('button', { name: /copy chatbot instruction/i }));
 
-    expect(screen.getByLabelText(/drop in your chatbot/i)).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByLabelText(/drop in your chatbot/i)).toBeInTheDocument(),
+    );
   });
 });

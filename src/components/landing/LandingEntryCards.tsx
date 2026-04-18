@@ -15,8 +15,14 @@ type DecodeState = {
 
 type CodingFlowState = 'idle' | 'creating' | 'waiting' | 'error';
 
-function buildChatbotInstruction(origin: string) {
-  return `follow the instruction in this file: ${origin}/instructions/chatbot.md`;
+type ChatbotCopyState = 'idle' | 'loading' | 'error';
+
+async function fetchChatbotInstruction(): Promise<string> {
+  const response = await fetch('/instructions/chatbot.md', { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error('Could not load chatbot instructions. Please try again.');
+  }
+  return response.text();
 }
 
 function getReferralContext() {
@@ -35,12 +41,13 @@ export function LandingEntryCards() {
   const [codingSessionId, setCodingSessionId] = useState<string | null>(null);
   const [codingFlowState, setCodingFlowState] = useState<CodingFlowState>('idle');
   const [codingFlowMessage, setCodingFlowMessage] = useState<string | null>(null);
+  const [chatbotCopyState, setChatbotCopyState] = useState<ChatbotCopyState>('idle');
+  const [chatbotCopyError, setChatbotCopyError] = useState<string | null>(null);
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const chatbotPanelRef = useRef<HTMLDivElement | null>(null);
 
   const codingInstructionUrl = origin ? `${origin}/instructions/coding-agent.md` : '/instructions/coding-agent.md';
   const chatbotInstructionUrl = origin ? `${origin}/instructions/chatbot.md` : '/instructions/chatbot.md';
-  const chatbotInstruction = buildChatbotInstruction(origin);
 
   useEffect(() => {
     if (!codingSessionId || selectedMode !== 'coding') {
@@ -145,6 +152,22 @@ export function LandingEntryCards() {
       '',
       'Do not ask me to submit manually. Submit it yourself and then tell me it was sent.',
     ].join('\n');
+  }
+
+  async function copyChatbotInstruction() {
+    try {
+      setChatbotCopyState('loading');
+      setChatbotCopyError(null);
+      const contents = await fetchChatbotInstruction();
+      await copyText('chatbot', contents);
+      setShowChatbotPanel(true);
+      setChatbotCopyState('idle');
+    } catch (error) {
+      setChatbotCopyState('error');
+      setChatbotCopyError(
+        error instanceof Error ? error.message : 'Could not copy the instruction. Please try again.',
+      );
+    }
   }
 
   async function copyCodingInstruction() {
@@ -364,13 +387,18 @@ export function LandingEntryCards() {
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setShowChatbotPanel(true);
-                  void copyText('chatbot', chatbotInstruction);
+                  void copyChatbotInstruction();
                 }}
-                className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100"
+                disabled={chatbotCopyState === 'loading'}
+                className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100 disabled:cursor-wait disabled:opacity-75"
               >
-                Copy chatbot instruction
+                {chatbotCopyState === 'loading' ? 'Preparing…' : 'Copy chatbot instruction'}
               </button>
+              {chatbotCopyError ? (
+                <p className="mt-3 text-[0.8rem] text-rose-200" role="status" aria-live="polite">
+                  {chatbotCopyError}
+                </p>
+              ) : null}
             </div>
           </div>
         ) : (
