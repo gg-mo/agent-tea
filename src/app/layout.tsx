@@ -15,8 +15,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Agent Tea',
-  description: 'Your AI has tea about you.',
+  title: {
+    default: 'Agent Tea — Your AI has tea about you.',
+    template: '%s · Agent Tea',
+  },
+  description: 'Find out how your AI reads your style — in under two minutes.',
+  openGraph: {
+    title: 'Agent Tea — Your AI has tea about you.',
+    description: 'Find out how your AI reads your style — in under two minutes.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Agent Tea — Your AI has tea about you.',
+    description: 'Find out how your AI reads your style — in under two minutes.',
+  },
 };
 
 export default function RootLayout({

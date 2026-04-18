@@ -224,3 +224,4 @@ test-results/
 
 # Keep safe template tracked.
 !.env.example
+tsconfig.tsbuildinfo
