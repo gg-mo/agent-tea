@@ -6,8 +6,8 @@ This project validates required environment variables at runtime so missing conf
 
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (preferred) or `NEXT_PUBLIC_SUPABASE_ANON_KEY` (legacy)
+- `SUPABASE_SECRET_KEY` (preferred) or `SUPABASE_SERVICE_ROLE_KEY` (legacy)
 
 Copy `.env.example` to `.env.local` for local development.
 
@@ -27,5 +27,5 @@ Then replace values with your Supabase project credentials.
 
 ## Notes
 
-- `SUPABASE_SERVICE_ROLE_KEY` must remain server-only.
+- `SUPABASE_SECRET_KEY` / `SUPABASE_SERVICE_ROLE_KEY` must remain server-only.
 - `NEXT_PUBLIC_*` values are exposed to the browser by design.

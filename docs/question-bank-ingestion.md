@@ -14,7 +14,7 @@ npm run db:verify-questions
 ## Required Environment Variables
 
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY` (preferred) or `SUPABASE_SERVICE_ROLE_KEY` (legacy)
 
 ## What Ingestion Does
 
