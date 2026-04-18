@@ -136,6 +136,8 @@ celerybeat.pid
 
 # Environments
 .env
+.env.local
+.env.*.local
 .envrc
 .venv
 env/
@@ -219,3 +221,6 @@ test-results/
 # Keep application source tracked even with inherited Python ignore patterns.
 !src/lib/
 !src/lib/**
+
+# Keep safe template tracked.
+!.env.example

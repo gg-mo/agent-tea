@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+type EnvSource = Record<string, string | undefined>;
+
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
@@ -19,8 +21,23 @@ function formatZodError(error: z.ZodError): string {
   return ['Missing or invalid environment variables:', ...details].join('\n');
 }
 
-export function parseClientEnv(source: Record<string, string | undefined> = process.env) {
-  const parsed = clientEnvSchema.safeParse(source);
+function normalizeSupabaseEnvAliases(source: EnvSource): EnvSource {
+  const publishableKey = source.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
+  const anonKey = source.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  const secretKey = source.SUPABASE_SECRET_KEY?.trim();
+  const serviceRoleKey = source.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
+  return {
+    ...source,
+    // Prefer new key names when both are provided to ease migration.
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: publishableKey || anonKey,
+    SUPABASE_SERVICE_ROLE_KEY: secretKey || serviceRoleKey,
+  };
+}
+
+export function parseClientEnv(source: EnvSource = process.env) {
+  const normalizedSource = normalizeSupabaseEnvAliases(source);
+  const parsed = clientEnvSchema.safeParse(normalizedSource);
 
   if (!parsed.success) {
     throw new Error(formatZodError(parsed.error));
@@ -29,8 +46,9 @@ export function parseClientEnv(source: Record<string, string | undefined> = proc
   return parsed.data;
 }
 
-export function parseServerEnv(source: Record<string, string | undefined> = process.env) {
-  const parsed = serverEnvSchema.safeParse(source);
+export function parseServerEnv(source: EnvSource = process.env) {
+  const normalizedSource = normalizeSupabaseEnvAliases(source);
+  const parsed = serverEnvSchema.safeParse(normalizedSource);
 
   if (!parsed.success) {
     throw new Error(formatZodError(parsed.error));

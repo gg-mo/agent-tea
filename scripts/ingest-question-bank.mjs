@@ -15,9 +15,20 @@ function requireEnv(name) {
   return value;
 }
 
+function requireAnyEnv(names) {
+  for (const name of names) {
+    const value = process.env[name];
+    if (value) {
+      return value;
+    }
+  }
+
+  throw new Error(`Missing required environment variable: ${names.join(' or ')}`);
+}
+
 function getSupabaseAdminClient() {
   const url = requireEnv('NEXT_PUBLIC_SUPABASE_URL');
-  const serviceRole = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
+  const serviceRole = requireAnyEnv(['SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY']);
 
   return createClient(url, serviceRole, {
     auth: {
