@@ -1,5 +1,8 @@
-export function jsonResponse(payload: unknown, status = 200) {
-  return Response.json(payload, { status });
+export function jsonResponse(payload: unknown, status = 200, headers?: HeadersInit) {
+  return Response.json(payload, {
+    status,
+    headers,
+  });
 }
 
 export async function safeParseJson<T>(request: Request): Promise<T> {

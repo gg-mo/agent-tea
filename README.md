@@ -19,7 +19,17 @@ See [docs/deployment-env.md](docs/deployment-env.md) for required environment va
 npm run lint
 npm run test
 npm run build
+npm run ops:smoke -- http://localhost:3000
+npm run perf:critical -- http://localhost:3000 15
 ```
+
+## Phase 3/4 Ops Docs
+
+- `docs/analytics.md`
+- `docs/safety.md`
+- `docs/performance.md`
+- `docs/release-ops.md`
+- `docs/launch-readiness.md`
 
 ## E2E Skeleton
 

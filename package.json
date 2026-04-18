@@ -14,7 +14,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:ingest-questions": "node scripts/ingest-question-bank.mjs",
-    "db:verify-questions": "node scripts/verify-question-bank.mjs"
+    "db:verify-questions": "node scripts/verify-question-bank.mjs",
+    "ops:smoke": "node scripts/smoke-post-deploy.mjs",
+    "perf:critical": "node scripts/perf-critical-routes.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

@@ -10,6 +10,8 @@ export const createSessionBodySchema = z
   .object({
     intakeMode: z.enum(['coding_agent', 'chatbot', 'manual']).optional(),
     questionSetVersion: z.string().optional(),
+    referralCode: z.string().max(120).optional(),
+    referrerSessionId: z.string().uuid().optional(),
   })
   .optional();
 

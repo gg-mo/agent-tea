@@ -1,6 +1,7 @@
 import { TypeFigure } from '@/components/figures/TypeFigure';
 import { LandingEntryCards } from '@/components/landing/LandingEntryCards';
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
+import { SocialProofPreview } from '@/components/landing/SocialProofPreview';
 
 export default function Home() {
   return (
@@ -46,6 +47,8 @@ export default function Home() {
         <div className="mt-10">
           <LandingEntryCards />
         </div>
+
+        <SocialProofPreview />
       </div>
     </main>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
 
@@ -21,6 +21,26 @@ export function LandingEntryCards() {
   const [copiedKey, setCopiedKey] = useState<Mode | null>(null);
   const [encodedPayload, setEncodedPayload] = useState('');
   const [decodeState, setDecodeState] = useState<DecodeState>({ status: 'idle' });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+
+    if (ref) {
+      localStorage.setItem('agentTeaReferral', ref);
+    }
+
+    void fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        eventName: 'landing_view',
+        eventPayload: {
+          referralCode: ref ?? null,
+        },
+      }),
+    }).catch(() => undefined);
+  }, []);
 
   const copyLabel = useMemo(() => {
     if (!copiedKey) {
@@ -55,10 +75,17 @@ export function LandingEntryCards() {
     }
 
     try {
+      const referralCode = localStorage.getItem('agentTeaReferral') ?? undefined;
+      const referralUuid = referralCode && /^[0-9a-f-]{36}$/i.test(referralCode) ? referralCode : undefined;
+
       const sessionResponse = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ intakeMode: 'chatbot' }),
+        body: JSON.stringify({
+          intakeMode: 'chatbot',
+          referralCode,
+          referrerSessionId: referralUuid,
+        }),
       });
       const sessionData = await sessionResponse.json();
 
@@ -75,6 +102,19 @@ export function LandingEntryCards() {
       const ingestData = await ingestResponse.json();
 
       if (!ingestResponse.ok) {
+        void fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            eventName: 'answers_ingest_failed',
+            sessionId: sessionData.sessionId,
+            eventPayload: {
+              source: 'chatbot',
+              hintCount: Array.isArray(ingestData.hints) ? ingestData.hints.length : 0,
+            },
+          }),
+        }).catch(() => undefined);
+
         setDecodeState({
           status: 'error',
           sessionId: sessionData.sessionId,
@@ -91,8 +131,22 @@ export function LandingEntryCards() {
       setDecodeState({
         status: 'success',
         sessionId: sessionData.sessionId,
-        message: 'Decoded successfully. You can now score and reveal results.',
+        message: 'Decoded successfully. Scoring your result...',
       });
+
+      await fetch(`/api/sessions/${sessionData.sessionId}/score`, {
+        method: 'POST',
+      });
+      void fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventName: 'chatbot_flow_completed',
+          sessionId: sessionData.sessionId,
+        }),
+      }).catch(() => undefined);
+
+      window.location.assign(`/results/${sessionData.sessionId}`);
     } catch (error) {
       setDecodeState({
         status: 'error',

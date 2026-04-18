@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 
 import { ResultsExperience } from '@/components/results/ResultsExperience';
-import { getSessionResultById } from '@/lib/server/session-service';
+import { getSessionResultById, getTypeDistributionSummary } from '@/lib/server/session-service';
+import { createSupabaseAuthServerClient } from '@/lib/supabase/auth-server';
 
 type ParamsContext = {
   params: { sessionId: string } | Promise<{ sessionId: string }>;
@@ -9,11 +10,32 @@ type ParamsContext = {
 
 export default async function ResultsPage(context: ParamsContext) {
   const { sessionId } = await Promise.resolve(context.params);
-  const result = await getSessionResultById(sessionId);
+  const [result, socialProof] = await Promise.all([
+    getSessionResultById(sessionId),
+    getTypeDistributionSummary(7),
+  ]);
 
   if (!result) {
     notFound();
   }
 
-  return <ResultsExperience result={result} sessionId={sessionId} />;
+  let isSignedIn = false;
+  try {
+    const supabase = await createSupabaseAuthServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    isSignedIn = Boolean(user);
+  } catch {
+    isSignedIn = false;
+  }
+
+  return (
+    <ResultsExperience
+      result={result}
+      sessionId={sessionId}
+      socialProof={socialProof}
+      isSignedIn={isSignedIn}
+    />
+  );
 }

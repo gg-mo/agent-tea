@@ -28,6 +28,10 @@ export type SessionRow = {
   intakeMode: SessionIntakeMode;
   status: SessionStatus;
   randomSeed: string;
+  userId?: string;
+  referralCode?: string;
+  referrerSessionId?: string;
+  completedAt?: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -58,6 +62,37 @@ export type InstructionRun = {
   errors: unknown[];
 };
 
+export type CompareSetRow = {
+  id: string;
+  ownerUserId?: string;
+  createdAt: string;
+  updatedAt: string;
+  items: Array<{
+    sessionId: string;
+    label?: string;
+  }>;
+};
+
+export type EventLogInput = {
+  sessionId?: string;
+  userId?: string;
+  eventName: string;
+  eventSource?: 'client' | 'server';
+  eventPayload?: Record<string, unknown>;
+};
+
+export type TypeDistributionRow = {
+  typeCode: string;
+  count: number;
+};
+
+export type FunnelStatsRow = {
+  stage: string;
+  count: number;
+  conversionFromPrevious?: number | null;
+  conversionFromStart?: number | null;
+};
+
 export type SessionStore = {
   getActiveQuestionSet(version?: string): Promise<QuestionSetRow | null>;
   getQuestions(questionSetId: string): Promise<QuestionRow[]>;
@@ -66,12 +101,25 @@ export type SessionStore = {
     questionSetVersion: string;
     intakeMode: SessionIntakeMode;
     randomSeed: string;
+    referralCode?: string;
+    referrerSessionId?: string;
   }): Promise<SessionRow>;
   getSession(sessionId: string): Promise<SessionRow | null>;
+  listSessionsByUser(userId: string): Promise<SessionRow[]>;
+  attachSessionToUser(sessionId: string, userId: string): Promise<void>;
   upsertAnswers(sessionId: string, answers: PersistedAnswer[]): Promise<void>;
   getAnswers(sessionId: string): Promise<PersistedAnswer[]>;
   setSessionStatus(sessionId: string, status: SessionStatus): Promise<void>;
   recordInstructionRun(input: InstructionRun): Promise<void>;
+  recordEvent(input: EventLogInput): Promise<void>;
   upsertResult(sessionId: string, result: PersistedResult): Promise<void>;
   getResult(sessionId: string): Promise<PersistedResult | null>;
+  getTypeDistribution(days: number): Promise<TypeDistributionRow[]>;
+  getFunnelStats(days: number): Promise<FunnelStatsRow[]>;
+  createCompareSet(input: {
+    sessionIds: string[];
+    labels?: string[];
+    ownerUserId?: string;
+  }): Promise<CompareSetRow>;
+  getCompareSet(compareSetId: string): Promise<CompareSetRow | null>;
 };
