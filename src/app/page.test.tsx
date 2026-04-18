@@ -44,7 +44,9 @@ describe('Home page', () => {
     fireEvent.click(screen.getByRole('button', { name: /see what your ai thinks of you/i }));
 
     expect(screen.queryByLabelText(/paste chatbot encoded answer/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /copy chatbot instruction/i })).not.toBeInTheDocument();
 
+    fireEvent.click(screen.getByRole('heading', { name: /chatbots/i }));
     fireEvent.click(screen.getByRole('button', { name: /copy chatbot instruction/i }));
 
     expect(screen.getByLabelText(/paste chatbot encoded answer/i)).toBeInTheDocument();
