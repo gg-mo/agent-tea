@@ -240,13 +240,26 @@ export const supabaseSessionStore: SessionStore = {
 
   async recordEvent(input: EventLogInput) {
     const client = createSupabaseServerClient({ useServiceRole: true });
-    const { error } = await client.from('event_log').insert({
+    const payloadWithNewColumns = {
       session_id: input.sessionId ?? null,
       user_id: input.userId ?? null,
       event_name: input.eventName,
       event_source: input.eventSource ?? 'server',
       event_payload: input.eventPayload ?? {},
-    });
+    };
+
+    let { error } = await client.from('event_log').insert(payloadWithNewColumns);
+
+    // Backward-compatible fallback for older deployments that have not
+    // applied event_log column extensions yet.
+    if (error && /event_source|user_id/i.test(error.message ?? '')) {
+      const { error: legacyError } = await client.from('event_log').insert({
+        session_id: input.sessionId ?? null,
+        event_name: input.eventName,
+        event_payload: input.eventPayload ?? {},
+      });
+      error = legacyError;
+    }
 
     if (error) {
       throw error;
