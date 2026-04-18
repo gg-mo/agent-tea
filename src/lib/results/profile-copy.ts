@@ -2,9 +2,9 @@ import type { DimensionId } from '@/lib/scoring/types';
 import {
   dimensionLabelsByMode,
   dimensionNarratives,
-  prohibitedRoastTerms,
   type NarrativeMode,
 } from '@/lib/results/copy-content';
+import { moderateCopyLine, moderateCopyLines } from '@/lib/results/moderation';
 
 type DimensionBreakdown = {
   dominantLetter: string;
@@ -28,6 +28,11 @@ export type ProfileCopy = {
   oneLiner: string;
   loves: string[];
   frustrates: string[];
+  moderation: {
+    rewriteCount: number;
+    highestSeverity: 0 | 1 | 2 | 3;
+    terms: string[];
+  };
 };
 
 export type BuildProfileCopyInput = {
@@ -93,13 +98,6 @@ function pickDimensionOrder(strongestSignals: StrongestSignal[]): DimensionId[] 
   return ordered;
 }
 
-function withGuardrails(text: string): string {
-  return prohibitedRoastTerms.reduce((line, term) => {
-    const matcher = new RegExp(`\\b${term}\\b`, 'gi');
-    return line.replace(matcher, 'intense');
-  }, text);
-}
-
 export function getDimensionLabels(mode: NarrativeMode) {
   return dimensionLabelsByMode[mode];
 }
@@ -143,14 +141,32 @@ export function buildProfileCopy(input: BuildProfileCopyInput): ProfileCopy {
           ? narrative.intrusive.soft
           : narrative.intrusive.strong;
 
-    loves.push(withGuardrails(picked.love));
-    frustrates.push(withGuardrails(picked.frustrate));
+    loves.push(picked.love);
+    frustrates.push(picked.frustrate);
   }
+
+  const oneLinerModerated = moderateCopyLine(oneLinerBase);
+  const lovesModerated = moderateCopyLines(loves.slice(0, 3));
+  const frustratesModerated = moderateCopyLines(frustrates.slice(0, 3));
+  const rewritePool = [
+    ...oneLinerModerated.rewrites,
+    ...lovesModerated.rewrites,
+    ...frustratesModerated.rewrites,
+  ];
+  const highestSeverity = rewritePool.reduce<0 | 1 | 2 | 3>(
+    (acc, item) => (item.severity > acc ? item.severity : acc),
+    0,
+  );
 
   return {
     nickname,
-    oneLiner: withGuardrails(oneLinerBase),
-    loves: loves.slice(0, 3),
-    frustrates: frustrates.slice(0, 3),
+    oneLiner: oneLinerModerated.text,
+    loves: lovesModerated.text,
+    frustrates: frustratesModerated.text,
+    moderation: {
+      rewriteCount: rewritePool.length,
+      highestSeverity,
+      terms: [...new Set(rewritePool.map((item) => item.term))],
+    },
   };
 }

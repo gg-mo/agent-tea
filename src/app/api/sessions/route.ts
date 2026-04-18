@@ -22,6 +22,8 @@ export async function POST(request: Request) {
     const created = await createSession({
       intakeMode,
       questionSetVersion: parsed.data?.questionSetVersion,
+      referralCode: parsed.data?.referralCode,
+      referrerSessionId: parsed.data?.referrerSessionId,
     });
 
     return jsonResponse({

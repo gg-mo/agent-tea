@@ -53,6 +53,68 @@ function toQuestionMap(questions: QuestionRow[]) {
   return new Map(questions.map((question) => [question.code, question]));
 }
 
+function dominantSideForDimension(item: {
+  dominantLetter: string;
+  positiveLetter: string;
+  negativeLetter: string;
+}) {
+  return item.dominantLetter === item.positiveLetter ? 'positive' : 'negative';
+}
+
+function buildEvidence(params: {
+  questions: QuestionRow[];
+  answers: PersistedAnswer[];
+  dimensionBreakdown: ScoreSessionResult['dimensionBreakdown'];
+}) {
+  const questionMap = toQuestionMap(params.questions);
+  const supportRows: Array<{
+    questionCode: string;
+    questionText: string;
+    dimension: DimensionId;
+    supportScore: number;
+    contradictionScore: number;
+    selectedValue: number;
+    reasoning?: string;
+  }> = [];
+
+  for (const answer of params.answers) {
+    const question = questionMap.get(answer.questionCode);
+
+    if (!question) {
+      continue;
+    }
+
+    const breakdown = params.dimensionBreakdown[question.dimension];
+    const dominantSide = dominantSideForDimension(breakdown);
+    const supportsDominant =
+      question.keyedSide === dominantSide ? answer.normalizedValue : 6 - answer.normalizedValue;
+    const contradictsDominant =
+      question.keyedSide === dominantSide ? 6 - answer.normalizedValue : answer.normalizedValue;
+
+    supportRows.push({
+      questionCode: answer.questionCode,
+      questionText: question.text,
+      dimension: question.dimension,
+      supportScore: supportsDominant,
+      contradictionScore: contradictsDominant,
+      selectedValue: answer.rawValue,
+      reasoning: answer.reasoning,
+    });
+  }
+
+  const strongestSupport = [...supportRows]
+    .sort((a, b) => b.supportScore - a.supportScore)
+    .slice(0, 5);
+  const strongestContradictions = [...supportRows]
+    .sort((a, b) => b.contradictionScore - a.contradictionScore)
+    .slice(0, 5);
+
+  return {
+    strongestSupport,
+    strongestContradictions,
+  };
+}
+
 const DIMENSION_IDS: DimensionId[] = ['clarity', 'tone', 'thinking_style', 'autonomy'];
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
@@ -195,6 +257,8 @@ function normalizePersistedResult(result: PersistedResult): NormalizedPersistedR
 export async function createSession(params: {
   intakeMode: SessionIntakeMode;
   questionSetVersion?: string;
+  referralCode?: string;
+  referrerSessionId?: string;
 }) {
   const store = getSessionStore();
   const questionSet = await store.getActiveQuestionSet(params.questionSetVersion);
@@ -211,6 +275,20 @@ export async function createSession(params: {
     questionSetVersion: questionSet.version,
     intakeMode: params.intakeMode,
     randomSeed,
+    referralCode: params.referralCode,
+    referrerSessionId: params.referrerSessionId,
+  });
+
+  await store.recordEvent({
+    sessionId: session.id,
+    eventName: 'session_created',
+    eventSource: 'server',
+    eventPayload: {
+      intakeMode: session.intakeMode,
+      questionSetVersion: session.questionSetVersion,
+      referralCode: params.referralCode ?? null,
+      referrerSessionId: params.referrerSessionId ?? null,
+    },
   });
 
   const orderedQuestions = constrainedShuffleQuestions(questions, randomSeed);
@@ -358,6 +436,15 @@ export async function scoreSessionById(session: SessionRow) {
   });
 
   await store.setSessionStatus(session.id, 'scored');
+  await store.recordEvent({
+    sessionId: session.id,
+    userId: session.userId,
+    eventName: 'session_scored',
+    eventSource: 'server',
+    eventPayload: {
+      typeCode: result.typeCode,
+    },
+  });
 
   return result;
 }
@@ -404,12 +491,131 @@ export async function getSessionResultById(sessionId: string) {
       questionCode: answer.questionCode,
       reasoning: answer.reasoning,
     }));
+  const evidence = buildEvidence({
+    questions,
+    answers,
+    dimensionBreakdown: normalizedResult.dimensionBreakdown,
+  });
 
   return {
     ...normalizedResult,
     replayAnswers,
     reasoningSnippets,
+    evidence,
   };
+}
+
+export async function getTypeDistributionSummary(days = 7) {
+  const store = getSessionStore();
+  const rows = await store.getTypeDistribution(days);
+  const sampleCount = rows.reduce((sum, row) => sum + row.count, 0);
+  const minimumSample = 24;
+
+  if (sampleCount < minimumSample) {
+    return {
+      sampleCount,
+      minimumSample,
+      mostCommon: null,
+      rarest: null,
+      rows,
+    };
+  }
+
+  const sorted = [...rows].sort((a, b) => b.count - a.count);
+  const mostCommon = sorted[0] ?? null;
+  const rarest = [...sorted].sort((a, b) => a.count - b.count)[0] ?? null;
+
+  return {
+    sampleCount,
+    minimumSample,
+    mostCommon,
+    rarest,
+    rows: sorted,
+  };
+}
+
+export async function getFunnelSummary(days = 7) {
+  const store = getSessionStore();
+  return store.getFunnelStats(days);
+}
+
+export async function trackEvent(params: {
+  eventName: string;
+  sessionId?: string;
+  userId?: string;
+  eventSource?: 'client' | 'server';
+  eventPayload?: Record<string, unknown>;
+}) {
+  const store = getSessionStore();
+  await store.recordEvent({
+    eventName: params.eventName,
+    sessionId: params.sessionId,
+    userId: params.userId,
+    eventSource: params.eventSource ?? 'server',
+    eventPayload: params.eventPayload,
+  });
+}
+
+export async function createCompareSet(params: {
+  sessionIds: string[];
+  labels?: string[];
+  ownerUserId?: string;
+}) {
+  const store = getSessionStore();
+  return store.createCompareSet(params);
+}
+
+export async function getCompareSetResults(compareSetId: string) {
+  const store = getSessionStore();
+  const compareSet = await store.getCompareSet(compareSetId);
+
+  if (!compareSet) {
+    return null;
+  }
+
+  const sessionsWithResults = await Promise.all(
+    compareSet.items.map(async (item) => {
+      const result = await getSessionResultById(item.sessionId);
+      const session = await store.getSession(item.sessionId);
+      return {
+        sessionId: item.sessionId,
+        label: item.label,
+        intakeMode: session?.intakeMode,
+        createdAt: session?.createdAt,
+        result,
+      };
+    }),
+  );
+  const filtered = sessionsWithResults.flatMap((item) => {
+    if (!item.result) {
+      return [];
+    }
+
+    return [
+      {
+        sessionId: item.sessionId,
+        label: item.label,
+        intakeMode: item.intakeMode,
+        createdAt: item.createdAt,
+        result: item.result,
+      },
+    ];
+  });
+
+  return {
+    compareSet,
+    sessions: filtered,
+  };
+}
+
+export async function claimSessionForUser(sessionId: string, userId: string) {
+  const store = getSessionStore();
+  await store.attachSessionToUser(sessionId, userId);
+}
+
+export async function listSessionsForUser(userId: string) {
+  const store = getSessionStore();
+  return store.listSessionsByUser(userId);
 }
 
 export async function requireSession(sessionId: string) {

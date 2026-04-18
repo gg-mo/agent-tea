@@ -1,5 +1,5 @@
 import { encodedIngestBodySchema } from '@/lib/ingestion/ingestion-schemas';
-import { ingestEncodedPayload, requireSession } from '@/lib/server/session-service';
+import { ingestEncodedPayload, requireSession, trackEvent } from '@/lib/server/session-service';
 import { jsonResponse, safeParseJson } from '@/lib/server/http';
 
 type ParamsContext = {
@@ -20,6 +20,16 @@ export async function POST(request: Request, context: ParamsContext) {
     const ingestion = await ingestEncodedPayload(session, parsed.data.payload);
 
     if (!ingestion.ok) {
+      await trackEvent({
+        sessionId,
+        eventName: 'answers_ingest_failed',
+        eventSource: 'server',
+        eventPayload: {
+          source: 'chatbot',
+          hintCount: ingestion.hints.length,
+        },
+      });
+
       return jsonResponse(
         {
           ok: false,
@@ -31,6 +41,17 @@ export async function POST(request: Request, context: ParamsContext) {
         400,
       );
     }
+
+    await trackEvent({
+      sessionId,
+      eventName: 'answers_ingested',
+      eventSource: 'server',
+      eventPayload: {
+        source: 'chatbot',
+        accepted: ingestion.answers.length,
+        warningCount: ingestion.warnings.length,
+      },
+    });
 
     return jsonResponse({
       ok: true,

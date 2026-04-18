@@ -1,5 +1,5 @@
 import { codingAgentIngestBodySchema } from '@/lib/ingestion/ingestion-schemas';
-import { ingestCodingAgentAnswers, requireSession } from '@/lib/server/session-service';
+import { ingestCodingAgentAnswers, requireSession, trackEvent } from '@/lib/server/session-service';
 import { jsonResponse, safeParseJson } from '@/lib/server/http';
 
 type ParamsContext = {
@@ -22,6 +22,16 @@ export async function POST(request: Request, context: ParamsContext) {
       parsed.data.answers,
       JSON.stringify(parsed.data),
     );
+
+    await trackEvent({
+      sessionId,
+      eventName: 'answers_ingested',
+      eventSource: 'server',
+      eventPayload: {
+        source: 'coding_agent',
+        accepted: ingestion.accepted,
+      },
+    });
 
     return jsonResponse({
       sessionId,
