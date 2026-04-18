@@ -20,6 +20,7 @@ import {
 import { constrainedShuffleQuestions } from '@/lib/questions/constrained-shuffle';
 import { getSessionStore } from '@/lib/server/session-store';
 import type {
+  InstructionRun,
   PersistedAnswer,
   PersistedResult,
   QuestionRow,
@@ -36,6 +37,14 @@ export type SessionQuestionPayload = {
 
 function normalizeAnswerValue(raw: number, reverseCoded: boolean) {
   return reverseCoded ? 6 - raw : raw;
+}
+
+async function safeRecordInstructionRun(run: InstructionRun) {
+  try {
+    await getSessionStore().recordInstructionRun(run);
+  } catch (error) {
+    console.warn('recordInstructionRun failed (non-fatal)', error);
+  }
 }
 
 function mapQuestionsToScoring(questions: QuestionRow[]) {
@@ -329,7 +338,7 @@ export async function ingestCodingAgentAnswers(
 
   const ingestion = await upsertNormalizedAnswers(session, answers, 'coding_agent');
 
-  await store.recordInstructionRun({
+  await safeRecordInstructionRun({
     sessionId: session.id,
     intakeMode: 'coding_agent',
     rawPayload,
@@ -350,7 +359,7 @@ export async function ingestEncodedPayload(session: SessionRow, payload: string)
   const parsed = parseEncodedAnswers({ payload, requiredQuestionCodes });
 
   if (!parsed.ok) {
-    await store.recordInstructionRun({
+    await safeRecordInstructionRun({
       sessionId: session.id,
       intakeMode: 'chatbot',
       rawPayload: payload,
@@ -372,7 +381,7 @@ export async function ingestEncodedPayload(session: SessionRow, payload: string)
     'chatbot',
   );
 
-  await store.recordInstructionRun({
+  await safeRecordInstructionRun({
     sessionId: session.id,
     intakeMode: 'chatbot',
     rawPayload: payload,
