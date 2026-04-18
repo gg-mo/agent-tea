@@ -15,16 +15,16 @@
 
 ## Milestone Map
 
-- `AT-1` to `AT-6`: Foundation and core test flow
-- `AT-7` to `AT-12`: Results depth, shareability, viral loops
-- `AT-13` to `AT-17`: Compare mode, social proof, optional accounts
-- `AT-18` to `AT-22`: Hardening, observability, launch operations
+- `AE-1` to `AE-6`: Foundation and core test flow
+- `AE-7` to `AE-12`: Results depth, shareability, viral loops
+- `AE-13` to `AE-17`: Compare mode, social proof, optional accounts
+- `AE-18` to `AE-22`: Hardening, observability, launch operations
 
 ---
 
 ## Phase 1: Foundation and Scoring Core
 
-### AT-1: Project Bootstrap (Next.js + Tooling + CI)
+### AE-1: Project Bootstrap (Next.js + Tooling + CI)
 
 **Goal**
 Create production-ready app scaffold with lint/test/build gates and Vercel-compatible setup.
@@ -40,7 +40,7 @@ Create production-ready app scaffold with lint/test/build gates and Vercel-compa
 
 **Coding Agent Prompt**
 ```text
-Implement AT-1 for Agent Tea.
+Implement AE-1 for Agent Tea.
 
 Requirements:
 1) Initialize a Next.js (App Router, TypeScript) project suitable for Vercel deployment.
@@ -55,7 +55,7 @@ Output:
 - Confirm lint/test/build results.
 ```
 
-### AT-2: Supabase Provisioning + Local Env Contract
+### AE-2: Supabase Provisioning + Local Env Contract
 
 **Goal**
 Define local/dev/prod environment strategy and Supabase project wiring.
@@ -70,7 +70,7 @@ Define local/dev/prod environment strategy and Supabase project wiring.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-2 for Agent Tea.
+Implement AE-2 for Agent Tea.
 
 Requirements:
 1) Add `.env.example` including NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SITE_URL.
@@ -84,7 +84,7 @@ Output:
 - Verification steps for local and Vercel env setup.
 ```
 
-### AT-3: Database Schema v1 (Core Entities)
+### AE-3: Database Schema v1 (Core Entities)
 
 **Goal**
 Create base schema for sessions, answers, results, spicy responses, and share cards.
@@ -106,7 +106,7 @@ Create base schema for sessions, answers, results, spicy responses, and share ca
 
 **Coding Agent Prompt**
 ```text
-Implement AT-3 for Agent Tea using Supabase SQL migrations.
+Implement AE-3 for Agent Tea using Supabase SQL migrations.
 
 Requirements:
 1) Create tables: test_sessions, session_answers, session_results, share_cards, event_log.
@@ -121,14 +121,14 @@ Output:
 - Commands used to apply/verify migrations.
 ```
 
-### AT-4: Question Bank Ingestion and Versioning
+### AE-4: Question Bank Ingestion and Versioning
 
 **Goal**
 Load `20 core + 12 spicy` question spec into DB with version support.
 
 **Deliverables**
 - Script to ingest JSON spec from `docs/launch-pack/09-question-bank-spec.json`
-- `question_sets` and `questions` tables (if not embedded in AT-3)
+- `question_sets` and `questions` tables (if not embedded in AE-3)
 - Version pinning on sessions
 
 **Acceptance Criteria**
@@ -136,7 +136,7 @@ Load `20 core + 12 spicy` question spec into DB with version support.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-4 for Agent Tea.
+Implement AE-4 for Agent Tea.
 
 Requirements:
 1) Create/import question bank tables with versioning.
@@ -150,7 +150,7 @@ Output:
 - Instructions for adding future question set versions.
 ```
 
-### AT-5: Scoring Engine (Deterministic + Tested)
+### AE-5: Scoring Engine (Deterministic + Tested)
 
 **Goal**
 Implement pure scoring module that outputs type code, percentages, strongest signals, and tie flags.
@@ -166,7 +166,7 @@ Implement pure scoring module that outputs type code, percentages, strongest sig
 
 **Coding Agent Prompt**
 ```text
-Implement AT-5 for Agent Tea.
+Implement AE-5 for Agent Tea.
 
 Requirements:
 1) Build a pure TypeScript scoring module using 1-5 Likert values.
@@ -181,7 +181,7 @@ Output:
 - Example JSON output for one fixture.
 ```
 
-### AT-6: Anonymous Session API + Persistence
+### AE-6: Anonymous Session API + Persistence
 
 **Goal**
 Enable end-to-end save/score/fetch flow without account creation.
@@ -197,7 +197,7 @@ Enable end-to-end save/score/fetch flow without account creation.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-6 for Agent Tea.
+Implement AE-6 for Agent Tea.
 
 Requirements:
 1) Add session creation endpoint returning session_id and question payload.
@@ -216,7 +216,7 @@ Output:
 
 ## Phase 2: Viral Product Experience
 
-### AT-7: Landing Page + Brand Voice (Agent Tea)
+### AE-7: Landing Page + Brand Voice (Agent Tea)
 
 **Goal**
 Ship homepage with final name and launch line: "Your AI has tea about you."
@@ -231,7 +231,7 @@ Ship homepage with final name and launch line: "Your AI has tea about you."
 
 **Coding Agent Prompt**
 ```text
-Implement AT-7 for Agent Tea frontend.
+Implement AE-7 for Agent Tea frontend.
 
 Requirements:
 1) Build responsive landing page with headline: "Your AI has tea about you."
@@ -246,7 +246,7 @@ Output:
 - Accessibility notes (focus states, contrast, keyboard nav).
 ```
 
-### AT-8: Test Runner UI (Shuffled + Smooth UX)
+### AE-8: Test Runner UI (Shuffled + Smooth UX)
 
 **Goal**
 Create fast test-taking UI with anti-adjacent-opposites logic.
@@ -261,7 +261,7 @@ Create fast test-taking UI with anti-adjacent-opposites logic.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-8 for Agent Tea.
+Implement AE-8 for Agent Tea.
 
 Requirements:
 1) Build test runner UI for 20 core + optional spicy interleaving.
@@ -276,7 +276,7 @@ Output:
 - Manual QA checklist.
 ```
 
-### AT-9: Results Page v1 (Type + Bars + Signals)
+### AE-9: Results Page v1 (Type + Bars + Signals)
 
 **Goal**
 Render highly shareable results page sections A-E from product spec.
@@ -292,7 +292,7 @@ Render highly shareable results page sections A-E from product spec.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-9 for Agent Tea.
+Implement AE-9 for Agent Tea.
 
 Requirements:
 1) Build results page components for type code, nickname, and one-line summary.
@@ -307,7 +307,7 @@ Output:
 - QA notes for mobile + desktop.
 ```
 
-### AT-10: Normal vs Intrusive Thoughts Mode
+### AE-10: Normal vs Intrusive Thoughts Mode
 
 **Goal**
 Add dual-tone narrative toggle with safe spicy transforms.
@@ -322,7 +322,7 @@ Add dual-tone narrative toggle with safe spicy transforms.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-10 for Agent Tea.
+Implement AE-10 for Agent Tea.
 
 Requirements:
 1) Add mode toggle: Normal / Intrusive Thoughts.
@@ -337,7 +337,7 @@ Output:
 - Example outputs for 3 type cases.
 ```
 
-### AT-11: Share Card Generator (Web + OG Image)
+### AE-11: Share Card Generator (Web + OG Image)
 
 **Goal**
 Generate social cards with type, nickname, and top stats.
@@ -352,7 +352,7 @@ Generate social cards with type, nickname, and top stats.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-11 for Agent Tea.
+Implement AE-11 for Agent Tea.
 
 Requirements:
 1) Build dynamic share-card image endpoint (e.g., @vercel/og or Satori stack).
@@ -367,7 +367,7 @@ Output:
 - Cross-platform preview verification notes.
 ```
 
-### AT-12: Character Figure System v1
+### AE-12: Character Figure System v1
 
 **Goal**
 Implement consistent illustration pipeline with type-aware variants.
@@ -382,7 +382,7 @@ Implement consistent illustration pipeline with type-aware variants.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-12 for Agent Tea.
+Implement AE-12 for Agent Tea.
 
 Requirements:
 1) Add figure asset manifest keyed by 16 type codes.
@@ -401,7 +401,7 @@ Output:
 
 ## Phase 3: Retention and Credibility Loops
 
-### AT-13: Social Proof Module (Most Common + Rarest)
+### AE-13: Social Proof Module (Most Common + Rarest)
 
 **Goal**
 Add weekly type frequency insights to result and landing pages.
@@ -416,7 +416,7 @@ Add weekly type frequency insights to result and landing pages.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-13 for Agent Tea.
+Implement AE-13 for Agent Tea.
 
 Requirements:
 1) Build 7-day aggregation for type frequencies from completed sessions.
@@ -431,7 +431,7 @@ Output:
 - Test results.
 ```
 
-### AT-14: Compare Mode v1 (Cross-Agent Results)
+### AE-14: Compare Mode v1 (Cross-Agent Results)
 
 **Goal**
 Let users compare multiple agent perspectives side-by-side.
@@ -446,7 +446,7 @@ Let users compare multiple agent perspectives side-by-side.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-14 for Agent Tea.
+Implement AE-14 for Agent Tea.
 
 Requirements:
 1) Create compare model to link 2+ session results.
@@ -461,7 +461,7 @@ Output:
 - Test evidence.
 ```
 
-### AT-15: Evidence Layer v1 (Optional Expand Section)
+### AE-15: Evidence Layer v1 (Optional Expand Section)
 
 **Goal**
 Add credibility details without slowing default viral flow.
@@ -476,7 +476,7 @@ Add credibility details without slowing default viral flow.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-15 for Agent Tea.
+Implement AE-15 for Agent Tea.
 
 Requirements:
 1) Add optional "Show why" section on results page.
@@ -491,7 +491,7 @@ Output:
 - Example payloads with and without evidence.
 ```
 
-### AT-16: Optional Account Linking (Post-Result Only)
+### AE-16: Optional Account Linking (Post-Result Only)
 
 **Goal**
 Introduce optional accounts for saved history and multi-agent profiles.
@@ -506,7 +506,7 @@ Introduce optional accounts for saved history and multi-agent profiles.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-16 for Agent Tea.
+Implement AE-16 for Agent Tea.
 
 Requirements:
 1) Add Supabase Auth with optional sign-in/sign-up flow.
@@ -521,7 +521,7 @@ Output:
 - QA steps proving anonymous-first behavior remains intact.
 ```
 
-### AT-17: Growth Hooks (Referrals + Re-share)
+### AE-17: Growth Hooks (Referrals + Re-share)
 
 **Goal**
 Increase replay and distribution through built-in growth mechanics.
@@ -536,7 +536,7 @@ Increase replay and distribution through built-in growth mechanics.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-17 for Agent Tea.
+Implement AE-17 for Agent Tea.
 
 Requirements:
 1) Add referral query param support and attribution persistence.
@@ -555,7 +555,7 @@ Output:
 
 ## Phase 4: Hardening and Launch Ops
 
-### AT-18: Analytics and Funnel Instrumentation
+### AE-18: Analytics and Funnel Instrumentation
 
 **Goal**
 Track drop-off and optimize completion/share loops.
@@ -570,7 +570,7 @@ Track drop-off and optimize completion/share loops.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-18 for Agent Tea.
+Implement AE-18 for Agent Tea.
 
 Requirements:
 1) Define canonical event names and required properties.
@@ -585,7 +585,7 @@ Output:
 - Example funnel readout.
 ```
 
-### AT-19: Content Moderation and Safety Guardrails
+### AE-19: Content Moderation and Safety Guardrails
 
 **Goal**
 Prevent abusive spicy output and unsafe generated text.
@@ -600,7 +600,7 @@ Prevent abusive spicy output and unsafe generated text.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-19 for Agent Tea.
+Implement AE-19 for Agent Tea.
 
 Requirements:
 1) Add content guardrail layer for spicy and narrative outputs.
@@ -615,7 +615,7 @@ Output:
 - Sample before/after rewrites.
 ```
 
-### AT-20: Performance and Reliability
+### AE-20: Performance and Reliability
 
 **Goal**
 Ensure fast global experience and stable API behavior on Vercel.
@@ -630,7 +630,7 @@ Ensure fast global experience and stable API behavior on Vercel.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-20 for Agent Tea.
+Implement AE-20 for Agent Tea.
 
 Requirements:
 1) Add caching headers and revalidation strategy for static and dynamic resources.
@@ -645,7 +645,7 @@ Output:
 - Reliability notes.
 ```
 
-### AT-21: Staging-to-Prod Release Pipeline
+### AE-21: Staging-to-Prod Release Pipeline
 
 **Goal**
 Establish safe deploy workflow via Vercel previews and protected production promotion.
@@ -660,7 +660,7 @@ Establish safe deploy workflow via Vercel previews and protected production prom
 
 **Coding Agent Prompt**
 ```text
-Implement AT-21 for Agent Tea.
+Implement AE-21 for Agent Tea.
 
 Requirements:
 1) Document branch-to-preview-to-prod workflow for Vercel.
@@ -675,7 +675,7 @@ Output:
 - Rollback decision tree.
 ```
 
-### AT-22: Launch Readiness and Backlog Split
+### AE-22: Launch Readiness and Backlog Split
 
 **Goal**
 Finalize v1 launch scope and separate v1.1+ backlog.
@@ -690,7 +690,7 @@ Finalize v1 launch scope and separate v1.1+ backlog.
 
 **Coding Agent Prompt**
 ```text
-Implement AT-22 for Agent Tea.
+Implement AE-22 for Agent Tea.
 
 Requirements:
 1) Create launch checklist doc with pass/fail criteria.
@@ -709,18 +709,18 @@ Output:
 
 ## Recommended Execution Order (Practical)
 
-1. Ship `AT-1` through `AT-6` first (functional test loop)
-2. Ship `AT-7` through `AT-11` second (viral UX + shareability)
-3. Add `AT-13` and `AT-14` next (social proof + compare loop)
-4. Delay `AT-16` optional accounts until post-traction unless needed earlier
-5. Run `AT-18` to `AT-22` before broad launch
+1. Ship `AE-1` through `AE-6` first (functional test loop)
+2. Ship `AE-7` through `AE-11` second (viral UX + shareability)
+3. Add `AE-13` and `AE-14` next (social proof + compare loop)
+4. Delay `AE-16` optional accounts until post-traction unless needed earlier
+5. Run `AE-18` to `AE-22` before broad launch
 
 ## MVP Scope Cutline (If You Need Speed)
 
 If you need a fast public beta, launch with:
 
-- Required: `AT-1` to `AT-11`
-- Nice-to-have: `AT-12`, `AT-13`
-- Defer: `AT-14` to `AT-22` (except essential safety from `AT-19`)
+- Required: `AE-1` to `AE-11`
+- Nice-to-have: `AE-12`, `AE-13`
+- Defer: `AE-14` to `AE-22` (except essential safety from `AE-19`)
 
 This gets you a viral-ready version quickly while preserving the roadmap for depth.
