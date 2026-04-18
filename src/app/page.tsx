@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { TypeFigure } from '@/components/figures/TypeFigure';
 import { LandingEntryCards } from '@/components/landing/LandingEntryCards';
@@ -9,6 +9,7 @@ import { SocialProofPreview } from '@/components/landing/SocialProofPreview';
 
 export default function Home() {
   const [showEntryCards, setShowEntryCards] = useState(false);
+  const entrySectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -30,6 +31,9 @@ export default function Home() {
 
   function handleStartClick() {
     setShowEntryCards(true);
+    window.setTimeout(() => {
+      entrySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 80);
   }
 
   return (
@@ -79,7 +83,7 @@ export default function Home() {
         </div>
 
         {showEntryCards ? (
-          <div id="entry-section" className="tea-rise-in mt-10">
+          <div id="entry-section" ref={entrySectionRef} className="tea-rise-in mt-10 scroll-mt-24">
             <LandingEntryCards />
           </div>
         ) : null}

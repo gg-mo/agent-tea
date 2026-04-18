@@ -149,23 +149,6 @@ export function LandingEntryCards() {
     }
   }
 
-  async function checkCodingSubmissionNow() {
-    if (!codingSessionId) return;
-
-    try {
-      const response = await fetch(`/api/sessions/${codingSessionId}/result`, { cache: 'no-store' });
-
-      if (response.ok) {
-        window.location.assign(`/results/${codingSessionId}`);
-        return;
-      }
-
-      setCodingFlowMessage('No reply yet. Ask your agent to run the pasted instruction.');
-    } catch {
-      setCodingFlowMessage('Could not check just now. Try again in a moment.');
-    }
-  }
-
   async function decodeChatbotPayload() {
     const payload = encodedPayload.trim();
 
@@ -279,28 +262,35 @@ export function LandingEntryCards() {
           className="pointer-events-none absolute -right-6 -top-8 w-28 rotate-6 opacity-35"
         />
         <h2 className="text-xl font-bold text-orange-100">Coding Agents</h2>
-        <p className="mt-2 text-sm leading-6 text-orange-50/85">
-          Paste one tiny instruction into your coding agent. It runs the quiz for you and your reveal opens
-          the moment it replies.
-        </p>
-        <code className="mt-4 block rounded-2xl border border-orange-200/30 bg-black/30 px-3 py-2 text-xs text-orange-50">
-          follow instructions in /instructions/coding-agent.md
-        </code>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              setSelectedMode('coding');
-              setShowChatbotPanel(false);
-              void copyCodingInstruction();
-            }}
-            disabled={codingFlowState === 'creating'}
-            className="tea-press inline-flex rounded-xl bg-orange-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-orange-100 disabled:cursor-wait disabled:opacity-75"
-          >
-            {codingFlowState === 'creating' ? 'Preparing…' : 'Copy coding instruction'}
-          </button>
-        </div>
+        <p className="mt-2 text-base font-semibold text-orange-50">I have a coding agent!</p>
+
+        {selectedMode === 'coding' ? (
+          <div className="tea-rise-in mt-4">
+            <p className="text-sm leading-6 text-orange-50/85">
+              Copy one tiny instruction, hand it to your agent, and your reveal opens the moment it replies.
+            </p>
+            <code className="mt-3 block rounded-2xl border border-orange-200/30 bg-black/30 px-3 py-2 text-xs text-orange-50">
+              follow instructions in /instructions/coding-agent.md
+            </code>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  void copyCodingInstruction();
+                }}
+                disabled={codingFlowState === 'creating'}
+                className="tea-press inline-flex rounded-xl bg-orange-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-orange-100 disabled:cursor-wait disabled:opacity-75"
+              >
+                {codingFlowState === 'creating' ? 'Preparing…' : 'Copy coding instruction'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="mt-3 text-xs text-orange-100/70">
+            Tap to get the one-line prompt → <span className="font-mono">/instructions/coding-agent.md</span>
+          </p>
+        )}
       </article>
 
       <article
@@ -325,70 +315,50 @@ export function LandingEntryCards() {
           className="pointer-events-none absolute -right-6 -top-8 w-28 -rotate-6 opacity-35"
         />
         <h2 className="text-xl font-bold text-cyan-100">Chatbots</h2>
-        <p className="mt-2 text-sm leading-6 text-cyan-50/85">
-          Paste a prompt into ChatGPT, Claude, or Gemini. Bring back its short reply and we&apos;ll unlock your
-          reveal here.
-        </p>
-        <code className="mt-4 block rounded-2xl border border-cyan-200/30 bg-black/30 px-3 py-2 text-xs text-cyan-50">
-          {chatbotInstruction}
-        </code>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              setSelectedMode('chatbot');
-              setShowChatbotPanel(true);
-              void copyText('chatbot', chatbotInstruction);
-            }}
-            className="tea-press inline-flex rounded-xl bg-cyan-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-100"
-          >
-            Copy chatbot instruction
-          </button>
-        </div>
+        <p className="mt-2 text-base font-semibold text-cyan-50">I use a chatbot!</p>
+
+        {selectedMode === 'chatbot' ? (
+          <div className="tea-rise-in mt-4">
+            <p className="text-sm leading-6 text-cyan-50/85">
+              Paste one prompt into ChatGPT, Claude, or Gemini — bring back its short reply and we&apos;ll unlock
+              your reveal.
+            </p>
+            <code className="mt-3 block rounded-2xl border border-cyan-200/30 bg-black/30 px-3 py-2 text-xs text-cyan-50">
+              {chatbotInstruction}
+            </code>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowChatbotPanel(true);
+                  void copyText('chatbot', chatbotInstruction);
+                }}
+                className="tea-press inline-flex rounded-xl bg-cyan-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-100"
+              >
+                Copy chatbot instruction
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="mt-3 text-xs text-cyan-100/70">
+            Tap to get the one-line prompt → <span className="font-mono">/instructions/chatbot.md</span>
+          </p>
+        )}
       </article>
 
-      {selectedMode === 'coding' ? (
+      {selectedMode === 'coding' && codingSessionId ? (
         <div className="tea-rise-in lg:col-span-2">
           <section className="mt-1 rounded-3xl border border-orange-100/35 bg-orange-200/15 p-5 shadow-[0_18px_54px_-24px_rgba(251,146,60,0.7)] ring-1 ring-orange-100/20">
-            <div className="mb-4 flex items-center gap-3 rounded-2xl border border-orange-100/25 bg-slate-950/45 p-3">
+            <div className="flex items-center gap-3 rounded-2xl border border-orange-100/25 bg-slate-950/45 p-3">
               <LobsterMascot
                 variant="bubble"
                 className="h-14 w-14 shrink-0 drop-shadow-[0_10px_12px_rgba(251,146,60,0.3)]"
               />
               <p className="text-sm text-orange-50/95">
-                Hand the copied instruction to your coding agent. Your reveal opens the second it replies — you
-                don&apos;t have to come back here to refresh.
+                Hand the copied instruction to your coding agent. Your reveal opens here automatically the
+                second it replies.
               </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => void copyCodingInstruction()}
-                disabled={codingFlowState === 'creating'}
-                className="tea-press inline-flex rounded-xl bg-orange-200 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-orange-100 disabled:cursor-wait disabled:opacity-75"
-              >
-                {codingFlowState === 'creating' ? 'Preparing…' : 'Copy instruction again'}
-              </button>
-
-              <button
-                type="button"
-                onClick={checkCodingSubmissionNow}
-                disabled={!codingSessionId}
-                className="tea-press inline-flex rounded-xl border border-orange-100/45 bg-orange-100/10 px-4 py-2 text-sm font-semibold text-orange-50 hover:bg-orange-100/20 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                I already pasted it
-              </button>
-
-              {codingSessionId ? (
-                <a
-                  href={`/results/${codingSessionId}`}
-                  className="tea-press inline-flex rounded-xl border border-orange-100/45 bg-orange-100/10 px-4 py-2 text-sm font-semibold text-orange-50 hover:bg-orange-100/20"
-                >
-                  Open my reveal
-                </a>
-              ) : null}
             </div>
 
             {codingFlowMessage ? (
