@@ -41,9 +41,11 @@ Example:
 Decoder behavior:
 
 - Parse tokens as `QNN-V` where `V` is 1-5
-- Reject duplicates/out-of-range values
+- Normalize forgiving input first (trim whitespace, accept lowercase `q`, accept `:`, `=`, `_` as separators, collapse repeated delimiters)
+- Reject duplicates/out-of-range values after normalization
 - Require all core questions for final scoring
 - Ignore unknown tokens safely and log parse warnings
+- Return immediate correction hints with exact token-level guidance (example: `Q7: expected 1-5, got 6`)
 
 ---
 
@@ -221,10 +223,13 @@ Enable end-to-end save/score/fetch flow without account creation across both cod
 - `POST /api/sessions/:id/score`
 - `GET /api/sessions/:id/result`
 - Input parsing/validation module for encoded format and coding-agent schema
+- Forgiving chatbot decode module with normalization + token recovery strategy
+- Structured correction-hints response shape (error code, token, hint text, suggested fix)
 - Store optional coding-agent short reasoning snippets per answer
 
 **Acceptance Criteria**
 - User can complete via coding-agent JSON or chatbot encoded paste and view persistent result from a single session URL
+- For malformed chatbot payloads, API returns actionable correction hints in <300ms for typical payload size
 
 **Coding Agent Prompt**
 ```text
@@ -233,10 +238,11 @@ Implement AE-6 for Agent Tea.
 Requirements:
 1) Add session creation endpoint returning session_id and question payload.
 2) Add coding-agent ingestion endpoint that accepts JSON answers and optional short first-person reasons per answer.
-3) Add chatbot ingestion endpoint that accepts encoded payload string and decodes to normalized answers.
+3) Add chatbot ingestion endpoint that accepts encoded payload string and decodes to normalized answers with forgiving parsing.
 4) Add score endpoint invoking scoring engine and persisting result.
 5) Add result endpoint returning display-ready payload including optional reasoning snippets for coding-agent sessions.
-6) Add request validation, error handling, and integration tests for all endpoints.
+6) Return structured correction hints for parse failures (token-level).
+7) Add request validation, error handling, and integration tests for all endpoints.
 
 Output:
 - API routes and validation strategy.
@@ -291,11 +297,12 @@ Ship seamless intake for coding-agent and chatbot workflows, each backed by dedi
 **Deliverables**
 - `public/instructions/coding-agent.md` with question set and cURL submission contract
 - `public/instructions/chatbot.md` with same question essence + encoded output instructions
-- Chatbot encoded input UI with parser feedback states (valid/invalid/partial)
+- Chatbot encoded input UI with parser feedback states (valid/invalid/partial) and immediate correction hints
 - Session-state transitions from pending -> ingested -> scored
 
 **Acceptance Criteria**
 - A user can complete either flow without confusion and recover from invalid pasted payloads
+- Invalid chatbot payloads get real-time, human-readable, token-specific hints with one-click example fixes
 
 **Coding Agent Prompt**
 ```text
@@ -308,8 +315,9 @@ Requirements:
 4) Ensure spicy questions are treated as normal scored questions in both instruction files and ingestion.
 5) Implement constrained shuffle so opposite-polarity statements in the same dimension are never consecutive.
 6) Add automated tests that fail if any generated question order violates the adjacency rule.
-7) Build chatbot paste UI with inline parse errors and actionable fixes.
-8) Add server/client validation so malformed payloads never corrupt sessions.
+7) Build chatbot paste UI with immediate inline parse hints and actionable fixes.
+8) Add forgiving parser UX features: auto-trim, auto-normalize separators, show corrected preview before submit.
+9) Add server/client validation so malformed payloads never corrupt sessions.
 
 Output:
 - Instruction file structure and URLs.

@@ -101,6 +101,30 @@
     "adjacency_rule": "Reject candidate order if question[i].dimension == question[i+1].dimension AND polarity differs (positive vs negative, or lean positive vs negative).",
     "max_shuffle_attempts": 200
   },
+  "encoded_ingestion_rules": {
+    "format_version_prefix": "AT1|",
+    "forgiving_parser": true,
+    "normalization_steps": [
+      "trim leading/trailing whitespace",
+      "accept lowercase q tokens and normalize to uppercase",
+      "accept token separators '-', ':', '=', '_' and normalize to '-'",
+      "collapse repeated delimiters",
+      "ignore unknown tokens while collecting warnings"
+    ],
+    "required_fields": [
+      "all core question answers"
+    ],
+    "error_response_contract": {
+      "returns_hints": true,
+      "hint_fields": [
+        "token",
+        "error_code",
+        "message",
+        "suggested_fix"
+      ],
+      "target_latency_ms": 300
+    }
+  },
   "core_questions": [
     {
       "id": "C01",
