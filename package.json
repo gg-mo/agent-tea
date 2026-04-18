@@ -12,7 +12,9 @@
     "test:e2e": "playwright test --list",
     "test:e2e:run": "playwright test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:ingest-questions": "node scripts/ingest-question-bank.mjs",
+    "db:verify-questions": "node scripts/verify-question-bank.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.3",
