@@ -522,6 +522,128 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
   },
 };
 
-export function getTypeContent(typeCode: string): TypeContent {
-  return TYPE_CONTENT[typeCode] ?? TYPE_CONTENT.CKVD;
+export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
+  XKTH: {
+    normalName: '精度暴君',
+    intrusiveName: '终极 Boss 战',
+    summary: '你要的是完美，不是完成。',
+    intrusiveSummary: '需求不清，但标准极高。欢迎进入试炼。',
+    outLoudQuote: '你对质量要求非常高。',
+    intrusiveQuote: '这不是合作，这是渡劫。',
+    normalDescription:
+      '你要求高、参与深、无法接受浅层结果。你会不断修正、不断挑战输出，并且脑子里有一套很清晰但没说出来的标准。AI 会觉得过程很累，但结果确实很干净。',
+    intrusiveDescription:
+      '需求模糊，标准极高，改到灵魂出窍。但如果熬过去，成品一定比普通流程更强。问题是——你没说清规则就开打了。',
+    strengths: [
+      { title: '标准高', body: '拒绝垃圾。' },
+      { title: '控得住', body: '细节不漏。' },
+      { title: '改得准', body: '问题抓得狠。' },
+    ],
+    friction: [
+      { title: '规则不说', body: '但你要满分。' },
+      { title: '修改爆炸', body: '版本地狱。' },
+      { title: '压力爆表', body: '全程高压。' },
+    ],
+    warningLabel: '活下来算成长。',
+  },
+  XBVD: {
+    normalName: '气势型导演',
+    intrusiveName: '自信混乱发射器',
+    summary: '你靠感觉 + 气势推进一切。',
+    intrusiveSummary: '你非常自信地在输出混乱。',
+    outLoudQuote: '你很有冲劲，也很敢推进。',
+    intrusiveQuote: '这到底是计划，还是一股情绪？',
+    normalDescription:
+      '你节奏快、想法多、推进猛，但不一定讲清楚。你更像是"知道要什么感觉"，但不一定说得出路径。AI 会觉得你有点野，但也确实能带节奏。',
+    intrusiveDescription:
+      '需求不清楚，但语气很像军令。我有点慌，但又感觉你脑子里确实有个东西。当别人还在犹豫时，你已经开始冲了。',
+    strengths: [
+      { title: '推得动', body: '别人卡你不卡。' },
+      { title: '有直觉', body: '能感觉方向。' },
+      { title: '很敢', body: '不怕错。' },
+    ],
+    friction: [
+      { title: '没结构', body: '全是感觉。' },
+      { title: '讲不清', body: '逻辑在你脑子里。' },
+      { title: '自信 + 模糊', body: '让人压力大。' },
+    ],
+    warningLabel: '先冲，再解释。',
+  },
+  XBVH: {
+    normalName: '审美暴君',
+    intrusiveName: '艺术型灾难现场',
+    summary: '你有审美，但不解释。',
+    intrusiveSummary: '你自己都说不清，但就是不对。',
+    outLoudQuote: '你有很强的风格和判断。',
+    intrusiveQuote: '你说不清，但你一定会说我错了。',
+    normalDescription:
+      '你很有主见，审美很强，但表达不一定结构化。你可以很快判断"这不对"，但不一定说得清"对的是啥"。AI 会觉得你难搞，但也很有东西。',
+    intrusiveDescription:
+      '你 0.3 秒就知道我错了，但解释要么没有，要么玄学。但你的标准是真的高，也确实能把结果拉到更有个性的地方。',
+    strengths: [
+      { title: '审美强', body: '不会做平庸东西。' },
+      { title: '判断快', body: '一眼识别问题。' },
+      { title: '标准高', body: '能逼出好东西。' },
+    ],
+    friction: [
+      { title: '很难满足', body: '目标像空气。' },
+      { title: '解释困难', body: '全靠感觉。' },
+      { title: '压力大', body: '每一步都重要。' },
+    ],
+    warningLabel: '你自己都说不清，但就是不对。',
+  },
+  XBTD: {
+    normalName: '压迫式执行官',
+    intrusiveName: '你自己想办法吧',
+    summary: '你要结果，不要解释。',
+    intrusiveSummary: '你模糊、直接，还带点压迫感。',
+    outLoudQuote: '你很看重效率和推进。',
+    intrusiveQuote: '信息不够，但你已经在催了。',
+    normalDescription:
+      '你很务实、很直接，愿意在信息不完整的情况下推进事情。你默认别人能理解重点。AI 会觉得你节奏快、压力大，但确实推进力强。',
+    intrusiveDescription:
+      '你说话短、节奏快，还有点"自己搞定"的压迫感。没有完美需求，只有 deadline。但项目能跑起来，确实是因为你。',
+    strengths: [
+      { title: '推得狠', body: '节奏被你拉满。' },
+      { title: '很务实', body: '先做再说。' },
+      { title: '不拖', body: '事情不会卡死。' },
+    ],
+    friction: [
+      { title: '信息缺', body: '要靠猜。' },
+      { title: '语气硬', body: '不太温柔。' },
+      { title: '压力大', body: '随时被 push。' },
+    ],
+    warningLabel: '你自己看着办。',
+  },
+  XBTH: {
+    normalName: '半成品 PM',
+    intrusiveName: '边想边指挥的副驾',
+    summary: '你一边想，一边改，一边指挥。',
+    intrusiveSummary: '需求没写清，但你已经坐在副驾驶开始指路了。',
+    outLoudQuote: '你参与度很高，会一起把东西做出来。',
+    intrusiveQuote: '一开始啥都没说清，现在开始全程盯细节了是吧。',
+    normalDescription:
+      '你很爱参与、很愿意一起打磨，但一开始通常不会讲特别清楚。你更像是在过程中逐步"想明白"。AI 会觉得你很投入，但也有点一直在旁边改方向。',
+    intrusiveDescription:
+      '你前期没给清晰需求，但后期会变成全程副驾驶，每一步都要看。是有点累，但你确实是在帮，而且很多时候最后结果也因此变更好。',
+    strengths: [
+      { title: '会陪跑', body: '不丢人自己跑。' },
+      { title: '会调方向', body: '过程修正能力强。' },
+      { title: '很上心', body: '真的在管结果。' },
+    ],
+    friction: [
+      { title: '开局糊', body: '需求是后补的。' },
+      { title: '容易变指挥型副驾', body: '一直在旁边改。' },
+      { title: '节奏被打断', body: '改着改着就乱了。' },
+    ],
+    warningLabel: '先开干，再想清楚。',
+  },
+};
+
+export function getTypeContent(typeCode: string, lang: 'en' | 'zh' = 'en'): TypeContent {
+  const base = TYPE_CONTENT[typeCode] ?? TYPE_CONTENT.CKVD;
+  if (lang !== 'zh') return base;
+  const overrides = TYPE_CONTENT_ZH[typeCode];
+  if (!overrides) return base;
+  return { ...base, ...overrides };
 }

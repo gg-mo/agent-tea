@@ -111,7 +111,7 @@ export function ResultsExperience({
   const [mode, setMode] = useState<NarrativeMode>('normal');
   const [quoteCopyState, setQuoteCopyState] = useState<'idle' | 'copied' | 'error'>('idle');
 
-  const typeContent = useMemo(() => getTypeContent(result.typeCode), [result.typeCode]);
+  const typeContent = useMemo(() => getTypeContent(result.typeCode, lang), [result.typeCode, lang]);
 
   const profileCopy = useMemo(
     () =>
