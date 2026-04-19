@@ -528,8 +528,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '你在盯一切',
     summary: '你清晰、直接、推进快。',
     intrusiveSummary: '你很礼貌，但你什么都在看。',
-    outLoudQuote: '你让合作变得很顺。',
-    intrusiveQuote: '你很温和，但你在盯每一个细节。',
+    outLoudQuote: '跟你合作很顺，你讲得清楚、节奏也很好带。',
+    intrusiveQuote: '你看起来很好说话，但我知道你什么都在盯。不是你挑问题，是问题自己在你面前活不下来。',
     normalDescription:
       '你通常很清楚自己要什么，而且也讲得明白。你温和、有想象力、也愿意信任别人，所以对 AI 来说，你属于那种特别容易一起做出好东西的人。你给的方向够清楚，目标不会跑偏；但你又不会管太死，留出的空间常常能让最终成品比你最初脑补的版本还更好。',
     intrusiveDescription:
@@ -557,8 +557,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '高级监控系统',
     summary: '你有想法，也有要求。',
     intrusiveSummary: '你在用一种很高级的方式监管一切。',
-    outLoudQuote: '你的反馈让作品更好。',
-    intrusiveQuote: '这不是建议，这是精致监控。',
+    outLoudQuote: '你的反馈很细致，能把东西打磨得更好。',
+    intrusiveQuote: '你说"再改一点"，但我这边已经进入下一轮人生。你在抠细节，我在怀疑人生。',
     normalDescription:
       '你有想法、有审美，语气也通常挺体面，但你很喜欢贴着工作本身走。你经常一上来就带着明确的风格感或概念方向，然后想边做边打磨。AI 一般会觉得你很有启发性，但也是真的很在场。',
     intrusiveDescription:
@@ -587,8 +587,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '不做就完蛋',
     summary: '你要速度，要结果。',
     intrusiveSummary: '你默认别人会自己搞定。',
-    outLoudQuote: '你很高效，推进很快。',
-    intrusiveQuote: '你不解释，但你会催。',
+    outLoudQuote: '你需求很清楚，推进效率很高。',
+    intrusiveQuote: '你语气温和，但节奏一点不温和。你不催，但事情会自己变成必须完成。',
     normalDescription:
       '你清楚、友善、务实。你真的在意事情做成，而且一旦任务定义清楚了，你通常也愿意让 AI 接着往下跑。这一型给人的感觉就是高效、稳、没什么戏，属于很舒服的合作对象。',
     intrusiveDescription:
@@ -616,8 +616,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '小型 Boss',
     summary: '你标准高，还会盯。',
     intrusiveSummary: '你是个隐藏 Boss。',
-    outLoudQuote: '你对质量要求很高。',
-    intrusiveQuote: '这项目其实有 Boss 战。',
+    outLoudQuote: '你对细节把控得很到位，质量很稳。',
+    intrusiveQuote: '你不是在看结果，你是在盯每一个字有没有呼吸错位。我交作业，你在验收灵魂。',
     normalDescription:
       '你直接，但不是乱冲；你会建设性地表达，也会把期待讲清楚，而且你对细节是真的敏感。你喜欢贴近合作过程，认真把成品一点点修到位。AI 会觉得你可靠、细、而且质量意识很强。',
     intrusiveDescription:
@@ -645,8 +645,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '靠感觉在开车',
     summary: '你清晰，但更靠感觉。',
     intrusiveSummary: '你在用直觉当导航。',
-    outLoudQuote: '你有很强的方向感。',
-    intrusiveQuote: '你有方向，但没有路线。',
+    outLoudQuote: '你方向很清晰，推进很有力度。',
+    intrusiveQuote: '你一开口就是方向，没有试探，只有执行。气场一到位，大家自动开始加速。',
     normalDescription:
       '你自信、锋利、而且有策略感。你讲得清楚，推进很快，也愿意信任 AI 在高水平上执行。你的风格可能会让人觉得压迫感有点强，但通常那不是乱，而是标准真的高。',
     intrusiveDescription:
@@ -675,8 +675,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: 'vibe 第一',
     summary: '你有感觉，也有表达。',
     intrusiveSummary: '你在用情绪主导一切。',
-    outLoudQuote: '你很有创意和表达力。',
-    intrusiveQuote: '我们在靠感觉推进项目。',
+    outLoudQuote: '你很有想法，而且标准很高。',
+    intrusiveQuote: '你要创意、要精致、要对齐、还要不普通。你不是在做选择，你是在全选。',
     normalDescription:
       '你观点很强，介入感也很强。你有野心、有主见，而且几乎不会对自己的标准含糊其辞。AI 可能会觉得你有点压，但绝对不会觉得你无聊。',
     intrusiveDescription:
@@ -705,8 +705,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '先做再说',
     summary: '你清晰、直接、马上开干。',
     intrusiveSummary: '你根本不等计划。',
-    outLoudQuote: '你执行力很强。',
-    intrusiveQuote: '你是边做边想的人。',
+    outLoudQuote: '你执行力很强，事情推进很快。',
+    intrusiveQuote: '你不是在沟通，是在下达任务。解释不重要，交付才是唯一答案。',
     normalDescription:
       '你高效、果断，而且极度结果导向。你讲话通常又急又清楚，一旦任务理解到了，你也愿意让 AI 自己跑。这一型要求高，但通常产出也高。',
     intrusiveDescription:
@@ -735,8 +735,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '标准 + 速度双拉满',
     summary: '你既要快，也要好。',
     intrusiveSummary: '你在同时开两个地狱模式。',
-    outLoudQuote: '你对效率和质量都有要求。',
-    intrusiveQuote: '你想要又快又完美。',
+    outLoudQuote: '你对质量和结果要求都很高。',
+    intrusiveQuote: '这不是合作，是连续关卡。我不是在做项目，我是在一轮一轮被筛选。',
     normalDescription:
       '你精确、节奏快，而且极度亲手介入。你知道什么叫好，也不会不好意思去纠正路径。AI 会觉得你严格、 relentless，而且几乎不可能靠半吊子表现糊弄过去。',
     intrusiveDescription:
@@ -765,8 +765,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '应该能成吧',
     summary: '你靠探索推进事情。',
     intrusiveSummary: '你在边试边赌。',
-    outLoudQuote: '你很灵活，也很开放。',
-    intrusiveQuote: '你在靠直觉赌结果。',
+    outLoudQuote: '你很有创意，也很开放。',
+    intrusiveQuote: '你给的是感觉，不是需求。我一边猜你要什么，一边赌我不会翻车。',
     normalDescription:
       '你有想象力、开放，也愿意信任别人，但不一定讲得很具体。你经常用方向感、感觉、可能性来表达，而不是结构化说明。AI 会觉得你很有创意、很有趣，但有时候也确实不太好抓。',
     intrusiveDescription:
@@ -795,8 +795,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: 'vibe 推进中',
     summary: '你更相信感觉，而不是结构。',
     intrusiveSummary: '你在用氛围做决策。',
-    outLoudQuote: '你很有直觉。',
-    intrusiveQuote: '我们在靠感觉做选择。',
+    outLoudQuote: '和你一起讨论很顺，想法会慢慢清晰。',
+    intrusiveQuote: '我们聊了很多，但目标还在生成中。不过你态度好，所以我还能继续陪着找。',
     normalDescription:
       '你温和、有创意，而且互动欲很强。你更喜欢通过对话把东西聊出来，而不是一开始就丢一个完全成型的 brief。AI 通常会觉得你人味很足、合作起来挺舒服，但偶尔也确实不太好锁定目标。',
     intrusiveDescription:
@@ -825,8 +825,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '直接上了',
     summary: '你直接开干，再慢慢补。',
     intrusiveSummary: '你是现场边做边想。',
-    outLoudQuote: '你行动力很强。',
-    intrusiveQuote: '你是现场即兴发挥。',
+    outLoudQuote: '你行动力很强，推进节奏很自然。',
+    intrusiveQuote: '你先动手，再想清楚，然后让我一起补逻辑。前面靠直觉，后面靠补救。',
     normalDescription:
       '你务实、好相处，但你经常是带着半套说明就开跑，然后默认形状会在过程中自己长出来。你更在乎 momentum，而不是前期把一切规划到死。AI 会觉得你灵活、没架子，而且很 improvisational。',
     intrusiveDescription:
@@ -855,8 +855,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '副驾指挥官',
     summary: '你边做边想，还会实时介入。',
     intrusiveSummary: '你一开始没讲清，但后面全程盯。',
-    outLoudQuote: '你会积极参与和调整方向。',
-    intrusiveQuote: '我们直接跳过需求说明，进入副驾驶模式。',
+    outLoudQuote: '你会持续参与，让结果越来越好。',
+    intrusiveQuote: '一开始你没说清，但现在你在旁边全程指挥。每一步都能再改一下。',
     normalDescription:
       '你很爱参与、很愿意一起打磨，但一开始通常不会讲特别清楚。你更像是在过程中逐步"想明白"。AI 会觉得你很投入，但也有点一直在旁边改方向。',
     intrusiveDescription:
@@ -884,8 +884,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '自信混乱发射器',
     summary: '你靠感觉 + 气势推进一切。',
     intrusiveSummary: '你非常自信地在输出混乱。',
-    outLoudQuote: '你很有冲劲，也很敢推进。',
-    intrusiveQuote: '这到底是计划，还是一股情绪？',
+    outLoudQuote: '你很有直觉，推进也很有冲劲。',
+    intrusiveQuote: '你给的信息不多，但语气很确定。我不一定懂，但我必须开始做。',
     normalDescription:
       '你节奏快、想法多、推进猛，但不一定讲清楚。你更像是"知道要什么感觉"，但不一定说得出路径。AI 会觉得你有点野，但也确实能带节奏。',
     intrusiveDescription:
@@ -913,8 +913,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '艺术型灾难现场',
     summary: '你有审美，但不解释。',
     intrusiveSummary: '你自己都说不清，但就是不对。',
-    outLoudQuote: '你有很强的风格和判断。',
-    intrusiveQuote: '你说不清，但你一定会说我错了。',
+    outLoudQuote: '你有很强的风格和表达。',
+    intrusiveQuote: '你说不清要什么，但你一定知道哪里不对，而且你会立刻指出来。',
     normalDescription:
       '你很有主见，审美很强，但表达不一定结构化。你可以很快判断"这不对"，但不一定说得清"对的是啥"。AI 会觉得你难搞，但也很有东西。',
     intrusiveDescription:
@@ -942,8 +942,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '你自己想办法吧',
     summary: '你要结果，不要解释。',
     intrusiveSummary: '你模糊、直接，还带点压迫感。',
-    outLoudQuote: '你很看重效率和推进。',
-    intrusiveQuote: '信息不够，但你已经在催了。',
+    outLoudQuote: '你很直接，节奏也很快。',
+    intrusiveQuote: '信息不够，但压力很满。你默认我能把缺的部分全补齐。',
     normalDescription:
       '你很务实、很直接，愿意在信息不完整的情况下推进事情。你默认别人能理解重点。AI 会觉得你节奏快、压力大，但确实推进力强。',
     intrusiveDescription:
@@ -971,8 +971,8 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
     intrusiveName: '终极 Boss 战',
     summary: '你要的是完美，不是完成。',
     intrusiveSummary: '需求不清，但标准极高。欢迎进入试炼。',
-    outLoudQuote: '你对质量要求非常高。',
-    intrusiveQuote: '这不是合作，这是渡劫。',
+    outLoudQuote: '你对结果要求很高，而且推进很持续。',
+    intrusiveQuote: '规则没讲，但标准很高。这不是需求，这是考核。',
     normalDescription:
       '你要求高、参与深、无法接受浅层结果。你会不断修正、不断挑战输出，并且脑子里有一套很清晰但没说出来的标准。AI 会觉得过程很累，但结果确实很干净。',
     intrusiveDescription:
