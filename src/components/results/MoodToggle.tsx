@@ -68,7 +68,7 @@ function CaptionPill({
   return (
     <span
       aria-hidden={!active}
-      className={`pointer-events-none whitespace-nowrap rounded-full border px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] transition-opacity duration-300 ${
+      className={`pointer-events-none whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[0.58rem] font-semibold uppercase tracking-[0.12em] transition-opacity duration-300 sm:px-3 sm:py-1 sm:text-[0.7rem] sm:tracking-[0.14em] ${
         active ? `opacity-100 ${activeStyle}` : 'border-transparent bg-transparent text-transparent opacity-0'
       }`}
     >
@@ -103,7 +103,7 @@ function MoodButton({
       onClick={onClick}
       aria-label={label}
       aria-pressed={active}
-      className={`relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-slate-900/60 ring-1 ring-white/10 backdrop-blur transition duration-300 hover:scale-105 sm:h-24 sm:w-24 ${
+      className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-slate-900/60 ring-1 ring-white/10 backdrop-blur transition duration-300 hover:scale-105 sm:h-24 sm:w-24 ${
         active ? `ring-2 ${ringColor}` : `${idleColor}`
       }`}
     >
@@ -116,7 +116,7 @@ function MoodButton({
 
 function AngelIcon() {
   return (
-    <svg viewBox="0 0 64 64" className="h-11 w-11 sm:h-14 sm:w-14" aria-hidden>
+    <svg viewBox="0 0 64 64" className="h-8 w-8 sm:h-14 sm:w-14" aria-hidden>
       <ellipse
         cx="32"
         cy="12"
@@ -159,7 +159,7 @@ function AngelIcon() {
 
 function DevilIcon() {
   return (
-    <svg viewBox="0 0 64 64" className="h-11 w-11 sm:h-14 sm:w-14" aria-hidden>
+    <svg viewBox="0 0 64 64" className="h-8 w-8 sm:h-14 sm:w-14" aria-hidden>
       <path
         d="M18 24 Q 14 14 22 16 Q 24 20 24 24 Z"
         fill="#b91c1c"
