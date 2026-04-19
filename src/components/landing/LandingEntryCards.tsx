@@ -332,7 +332,7 @@ export function LandingEntryCards() {
         {selectedMode === 'coding' ? (
           <div className="tea-lines mt-5">
             <p className="text-[0.95rem] leading-[1.6] text-slate-300/90">
-              Copy one instruction, hand it to your agent. Your reveal opens the moment it replies.
+              Copy one instruction, paste it into any open chat with your coding agent.
             </p>
             <a
               href={codingInstructionUrl}
@@ -425,7 +425,20 @@ export function LandingEntryCards() {
         ) : null}
       </article>
 
-      {selectedMode === 'coding' && codingFlowMessage ? (
+      {selectedMode === 'coding' && codingFlowState === 'waiting' ? (
+        <div
+          className="tea-toast flex items-center gap-3 rounded-2xl border border-orange-200/20 bg-orange-200/[0.06] px-4 py-3 text-sm text-orange-50/95 lg:col-span-2"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="inline-flex items-center gap-1" aria-hidden>
+            <span className="tea-dot tea-dot-1 h-1.5 w-1.5 rounded-full bg-orange-200" />
+            <span className="tea-dot tea-dot-2 h-1.5 w-1.5 rounded-full bg-orange-200" />
+            <span className="tea-dot tea-dot-3 h-1.5 w-1.5 rounded-full bg-orange-200" />
+          </span>
+          <span>Waiting for your agent to spill the tea…</span>
+        </div>
+      ) : selectedMode === 'coding' && codingFlowMessage ? (
         <p
           className="tea-toast text-sm text-orange-50/95 lg:col-span-2"
           role="status"

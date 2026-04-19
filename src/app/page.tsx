@@ -33,9 +33,9 @@ export default function Home() {
     window.setTimeout(() => {
       const node = entrySectionRef.current;
       if (node && typeof node.scrollIntoView === 'function') {
-        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        node.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 80);
+    }, 420);
   }
 
   return (
@@ -54,7 +54,11 @@ export default function Home() {
       />
 
       <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center px-6 py-24 sm:px-10">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
+        <div
+          className={`grid items-center gap-14 transition-all duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] lg:grid-cols-[1.25fr_0.75fr] lg:gap-16 ${
+            showEntryCards ? 'opacity-75 -translate-y-1' : 'opacity-100 translate-y-0'
+          }`}
+        >
           <section className="tea-lines">
             <p className="tea-eyebrow w-fit text-cyan-200/90">Agent Tea</p>
 
@@ -94,7 +98,7 @@ export default function Home() {
           <div
             id="entry-section"
             ref={entrySectionRef}
-            className="tea-rise-in mt-20 scroll-mt-24"
+            className="tea-entry-reveal mt-20 scroll-mt-24"
           >
             <LandingEntryCards />
           </div>
