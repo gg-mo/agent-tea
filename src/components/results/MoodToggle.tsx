@@ -1,6 +1,7 @@
 'use client';
 
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
+import { useI18n } from '@/lib/i18n/I18nProvider';
 import type { NarrativeMode } from '@/lib/results/copy-content';
 
 type MoodToggleProps = {
@@ -9,6 +10,7 @@ type MoodToggleProps = {
 };
 
 export function MoodToggle({ mode, onChange }: MoodToggleProps) {
+  const { t } = useI18n();
   const isIntrusive = mode === 'intrusive';
 
   return (
@@ -26,26 +28,26 @@ export function MoodToggle({ mode, onChange }: MoodToggleProps) {
       <div className="relative flex items-start justify-between gap-4">
         <div className="flex flex-col items-center gap-3">
           <MoodButton
-            label="Angel mode"
+            label={t('mood.angelLabel')}
             active={!isIntrusive}
             onClick={() => onChange('normal')}
             accent="cyan"
           >
             <AngelIcon />
           </MoodButton>
-          <CaptionPill active={!isIntrusive} accent="cyan">Keep it nice</CaptionPill>
+          <CaptionPill active={!isIntrusive} accent="cyan">{t('mood.angelCaption')}</CaptionPill>
         </div>
 
         <div className="flex flex-col items-center gap-3">
           <MoodButton
-            label="Devil mode"
+            label={t('mood.devilLabel')}
             active={isIntrusive}
             onClick={() => onChange('intrusive')}
             accent="rose"
           >
             <DevilIcon />
           </MoodButton>
-          <CaptionPill active={isIntrusive} accent="rose">Spill the tea</CaptionPill>
+          <CaptionPill active={isIntrusive} accent="rose">{t('mood.devilCaption')}</CaptionPill>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { MoodToggle } from '@/components/results/MoodToggle';
 import { TeaHomeBadge } from '@/components/shared/TeaHomeBadge';
+import { useI18n } from '@/lib/i18n/I18nProvider';
 import { type NarrativeMode } from '@/lib/results/copy-content';
 import { buildProfileCopy, getDimensionLabels } from '@/lib/results/profile-copy';
 import { getTypeContent } from '@/lib/results/type-content';
@@ -106,6 +107,7 @@ export function ResultsExperience({
   sessionId: string;
   socialProof?: SocialProof;
 }) {
+  const { t, lang } = useI18n();
   const [mode, setMode] = useState<NarrativeMode>('normal');
   const [quoteCopyState, setQuoteCopyState] = useState<'idle' | 'copied' | 'error'>('idle');
 
@@ -167,7 +169,7 @@ export function ResultsExperience({
   const displayName = isIntrusive ? typeContent.intrusiveName : typeContent.normalName;
   const akaName = isIntrusive ? typeContent.normalName : typeContent.intrusiveName;
   const mainDescription = isIntrusive ? typeContent.intrusiveDescription : typeContent.normalDescription;
-  const modeLabel = isIntrusive ? 'What your agent is actually thinking' : 'What your agent would say';
+  const modeLabel = isIntrusive ? t('results.modeIntrusive') : t('results.modeOutLoud');
 
   return (
     <main
@@ -193,7 +195,7 @@ export function ResultsExperience({
                   : 'border-cyan-200/35 bg-cyan-200/10 text-cyan-100'
               }`}
             >
-              Your dossier
+              {t('results.dossier')}
             </p>
             <h1 className="mt-5 flex gap-2 sm:gap-3" aria-label={result.typeCode}>
               {result.typeCode.split('').map((letter, index) => (
@@ -230,7 +232,7 @@ export function ResultsExperience({
           <div className="tea-scale-in" style={{ animationDelay: '120ms' }}>
             <MoodToggle mode={mode} onChange={setMode} />
             <p className="mt-24 text-center text-xs uppercase tracking-wide text-slate-400 sm:mt-28">
-              {isIntrusive ? "Your agent's intrusive thoughts" : 'What your agent says'}
+              {isIntrusive ? t('mood.intrusive') : t('mood.outLoud')}
             </p>
           </div>
         </section>
@@ -245,7 +247,7 @@ export function ResultsExperience({
           <div className="relative">
             <QuoteBlock
               key={mode}
-              label={isIntrusive ? 'Intrusive thoughts' : 'Out loud'}
+              label={isIntrusive ? t('results.quoteIntrusive') : t('results.quoteOutLoud')}
               quote={isIntrusive ? typeContent.intrusiveQuote : typeContent.outLoudQuote}
               accent={isIntrusive ? 'rose' : 'cyan'}
             />
@@ -256,16 +258,16 @@ export function ResultsExperience({
               onClick={copySignatureQuote}
               className="tea-press rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10"
             >
-              Copy current quote
+              {t('results.copyQuote')}
             </button>
             {quoteCopyState === 'copied' ? (
               <span className="text-xs text-emerald-200" role="status" aria-live="polite">
-                Copied.
+                {t('results.copied')}
               </span>
             ) : null}
             {quoteCopyState === 'error' ? (
               <span className="text-xs text-rose-200" role="status" aria-live="polite">
-                Clipboard blocked.
+                {t('results.clipboardBlocked')}
               </span>
             ) : null}
           </div>
@@ -274,8 +276,8 @@ export function ResultsExperience({
         {/* 3. Collaboration DNA */}
         <section className="tea-rise-in" style={{ animationDelay: '140ms' }}>
           <header className="mb-5">
-            <p className="text-xs font-semibold uppercase tracking-widest text-cyan-200/70">Your collaboration DNA</p>
-            <h2 className="mt-1 text-2xl font-bold text-slate-100">How your agent experiences you</h2>
+            <p className="text-xs font-semibold uppercase tracking-widest text-cyan-200/70">{t('results.dnaEyebrow')}</p>
+            <h2 className="mt-1 text-2xl font-bold text-slate-100">{t('results.dnaHeading')}</h2>
           </header>
           <div className="grid gap-4 md:grid-cols-2">
             {DIMENSION_ORDER.map((dimension) => {
@@ -329,6 +331,15 @@ export function ResultsExperience({
           </div>
         </section>
 
+        {lang === 'zh' ? (
+          <p
+            className="tea-rise-in rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-slate-300/85"
+            style={{ animationDelay: '170ms' }}
+          >
+            {t('results.englishOnlyNote')}
+          </p>
+        ) : null}
+
         {/* 4. Main read */}
         <section
           className={`tea-rise-in rounded-3xl border p-6 transition-colors sm:p-8 ${
@@ -357,10 +368,10 @@ export function ResultsExperience({
             style={{ animationDelay: '260ms' }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-emerald-200/80">
-              Why this works
+              {t('results.whyWorksEyebrow')}
             </p>
             <h2 className="mt-1 text-xl font-bold text-emerald-100">
-              What your agent likely loves
+              {t('results.whyWorksHeading')}
             </h2>
             <ul className="mt-4 space-y-3">
               {typeContent.strengths.map((item) => (
@@ -377,10 +388,10 @@ export function ResultsExperience({
             style={{ animationDelay: '300ms' }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-rose-200/80">
-              Why you&apos;re a lot
+              {t('results.whyALotEyebrow')}
             </p>
             <h2 className="mt-1 text-xl font-bold text-rose-100">
-              What may frustrate your agent
+              {t('results.whyALotHeading')}
             </h2>
             <ul className="mt-4 space-y-3">
               {typeContent.friction.map((item) => (
@@ -400,9 +411,9 @@ export function ResultsExperience({
             style={{ animationDelay: '340ms' }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-cyan-200/70">
-              Best collaborator match
+              {t('results.matchEyebrow')}
             </p>
-            <h2 className="mt-1 text-xl font-bold text-slate-100">Your ideal agent</h2>
+            <h2 className="mt-1 text-xl font-bold text-slate-100">{t('results.matchHeading')}</h2>
             <p className="mt-4 text-base leading-7 text-slate-200">
               {typeContent.bestCollaboratorMatch}
             </p>
@@ -414,7 +425,7 @@ export function ResultsExperience({
           >
             <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-amber-300/20 blur-2xl" />
             <p className="relative text-[10px] font-black uppercase tracking-[0.3em] text-amber-200">
-              ⚠ Warning label
+              {t('results.warning')}
             </p>
             <p className="relative mt-3 text-base font-semibold leading-7 text-amber-50">
               {typeContent.warningLabel}
@@ -428,10 +439,10 @@ export function ResultsExperience({
           style={{ animationDelay: '420ms' }}
         >
           <p className="text-xs font-semibold uppercase tracking-widest text-cyan-200/70">
-            Agent survival notes
+            {t('results.tipsEyebrow')}
           </p>
           <h2 className="mt-1 text-xl font-bold text-slate-100">
-            How to get the best out of your agent
+            {t('results.tipsHeading')}
           </h2>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {typeContent.workingTips.map((tip, index) => (
@@ -456,9 +467,9 @@ export function ResultsExperience({
           className="tea-rise-in rounded-3xl border border-white/10 bg-white/5 p-6"
           style={{ animationDelay: '460ms' }}
         >
-          <h2 className="text-lg font-semibold text-cyan-100">Strongest signals</h2>
+          <h2 className="text-lg font-semibold text-cyan-100">{t('results.signalsHeading')}</h2>
           <p className="mt-1 text-sm text-slate-400">
-            The three axes that shaped your type most confidently.
+            {t('results.signalsBody')}
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {result.strongestSignals.map((signal) => {
@@ -480,7 +491,7 @@ export function ResultsExperience({
                     {sideLabel} ({percent(signal.dominantPercent)}%)
                   </p>
                   <p className="mt-1 text-xs text-cyan-200">
-                    Confidence lead: {percent(signal.confidenceDelta)} pts
+                    {t('results.confidenceLead')} {percent(signal.confidenceDelta)} {t('results.confidencePts')}
                   </p>
                 </article>
               );
@@ -495,14 +506,15 @@ export function ResultsExperience({
             style={{ animationDelay: '500ms' }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-cyan-200/80">
-              Have another agent?
+              {t('results.anotherAgentEyebrow')}
             </p>
             <h2 className="mt-1 text-xl font-bold text-slate-100">
-              Got another coding agent or chatbot you lean on?
+              {t('results.anotherAgentHeading')}
             </h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Find out what <em className="not-italic font-semibold text-orange-100">their</em> tea
-              about you is. Same four dimensions, a fresh set of eyes.
+              {t('results.anotherAgentBodyBefore')}
+              <em className="not-italic font-semibold text-orange-100">{t('results.anotherAgentBodyEm')}</em>
+              {t('results.anotherAgentBodyAfter')}
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <a
@@ -516,13 +528,13 @@ export function ResultsExperience({
                 }}
                 className="tea-press rounded-full bg-cyan-300 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-200"
               >
-                Spill tea with another agent
+                {t('results.anotherAgentCta')}
               </a>
               <a
                 href={`/replay/${sessionId}`}
                 className="tea-press rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10"
               >
-                Watch your answers replay
+                {t('results.replayCta')}
               </a>
             </div>
           </article>
@@ -535,6 +547,7 @@ export function ResultsExperience({
 }
 
 function TeaSpilledCard({ count }: { count: number }) {
+  const { t } = useI18n();
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
@@ -586,16 +599,16 @@ function TeaSpilledCard({ count }: { count: number }) {
         />
       </svg>
       <p className="relative text-xs font-semibold uppercase tracking-widest text-cyan-200/90">
-        Tea spilled so far
+        {t('tea.spilledEyebrow')}
       </p>
       <p className="relative mt-3 flex items-baseline gap-2 text-6xl font-black tabular-nums text-cyan-100 sm:text-7xl">
         {display}
         <span className="text-sm font-semibold uppercase tracking-widest text-slate-400">
-          {count === 1 ? 'cup' : 'cups'}
+          {count === 1 ? t('tea.unitSingular') : t('tea.unitPlural')}
         </span>
       </p>
       <p className="relative mt-2 text-sm text-slate-300">
-        and still steeping — every session adds to the pot.
+        {t('tea.steeping')}
       </p>
     </article>
   );

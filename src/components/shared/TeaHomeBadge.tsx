@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
+import { useI18n } from '@/lib/i18n/I18nProvider';
 
 type Visibility = 'expanded' | 'condensed' | 'hidden';
 
 export function TeaHomeBadge() {
+  const { t } = useI18n();
   const [visibility, setVisibility] = useState<Visibility>('expanded');
   const lastScrollY = useRef(0);
 
@@ -39,7 +41,7 @@ export function TeaHomeBadge() {
   return (
     <Link
       href="/"
-      aria-label="Back to Agent Tea home"
+      aria-label={t('home.aria')}
       className={`group fixed left-4 top-4 z-40 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/60 px-2.5 py-1.5 text-slate-300 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.8)] backdrop-blur transition-all duration-300 hover:border-white/20 hover:text-white sm:left-6 sm:top-6 ${
         isHidden
           ? 'pointer-events-none -translate-y-3 opacity-0'
