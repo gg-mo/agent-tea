@@ -18,8 +18,9 @@ type CodingFlowState = 'idle' | 'creating' | 'waiting' | 'error';
 
 type ChatbotCopyState = 'idle' | 'loading' | 'error';
 
-async function fetchChatbotInstruction(): Promise<string> {
-  const response = await fetch('/instructions/chatbot.md', { cache: 'no-store' });
+async function fetchChatbotInstruction(lang: 'en' | 'zh'): Promise<string> {
+  const path = lang === 'zh' ? '/instructions/chatbot.zh.md' : '/instructions/chatbot.md';
+  const response = await fetch(path, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('Could not load the full instructions. Please try again.');
   }
@@ -70,7 +71,7 @@ function getReferralContext() {
 }
 
 export function LandingEntryCards() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [selectedMode, setSelectedMode] = useState<Mode | null>(null);
   const [showChatbotPanel, setShowChatbotPanel] = useState(false);
   const [copiedKey, setCopiedKey] = useState<Mode | null>(null);
@@ -87,7 +88,8 @@ export function LandingEntryCards() {
   const chatbotPanelRef = useRef<HTMLDivElement | null>(null);
   const manualCopyRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const codingInstructionUrl = origin ? `${origin}/instructions/coding-agent.md` : '/instructions/coding-agent.md';
+  const codingInstructionPath = lang === 'zh' ? '/instructions/coding-agent.zh.md' : '/instructions/coding-agent.md';
+  const codingInstructionUrl = origin ? `${origin}${codingInstructionPath}` : codingInstructionPath;
 
   useEffect(() => {
     if (!codingSessionId || selectedMode !== 'coding') {
@@ -135,7 +137,7 @@ export function LandingEntryCards() {
   useEffect(() => {
     if (selectedMode !== 'chatbot' || fullPromptCache) return;
     let cancelled = false;
-    void fetchChatbotInstruction()
+    void fetchChatbotInstruction(lang)
       .then((contents) => {
         if (!cancelled) setFullPromptCache(contents);
       })
@@ -143,7 +145,7 @@ export function LandingEntryCards() {
     return () => {
       cancelled = true;
     };
-  }, [selectedMode, fullPromptCache]);
+  }, [selectedMode, fullPromptCache, lang]);
 
   useEffect(() => {
     if (!manualCopy) return;
@@ -210,7 +212,7 @@ export function LandingEntryCards() {
 
   function buildCodingInstruction(sessionId: string) {
     const site = window.location.origin;
-    const instructionUrl = `${site}/instructions/coding-agent.md`;
+    const instructionUrl = `${site}${codingInstructionPath}`;
 
     return [
       `Follow the instructions in this file: ${instructionUrl}`,
@@ -238,7 +240,7 @@ export function LandingEntryCards() {
 
     try {
       setChatbotCopyState('loading');
-      const contents = await fetchChatbotInstruction();
+      const contents = await fetchChatbotInstruction(lang);
       setFullPromptCache(contents);
       copyText('chatbot', contents, t('copy.title.chatbotFull'));
       setChatbotCopyState('idle');

@@ -524,92 +524,331 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
 
 export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
   CKVD: {
-    normalName: '高效狠人',
+    normalName: '梦想型导演',
     intrusiveName: '你在盯一切',
     summary: '你清晰、直接、推进快。',
     intrusiveSummary: '你很礼貌，但你什么都在看。',
     outLoudQuote: '你让合作变得很顺。',
     intrusiveQuote: '你很温和，但你在盯每一个细节。',
+    normalDescription:
+      '你通常很清楚自己要什么，而且也讲得明白。你温和、有想象力、也愿意信任别人，所以对 AI 来说，你属于那种特别容易一起做出好东西的人。你给的方向够清楚，目标不会跑偏；但你又不会管太死，留出的空间常常能让最终成品比你最初脑补的版本还更好。',
+    intrusiveDescription:
+      '你清楚、体面、也肯放手，这种合作体验丝滑到有点不真实。好处很明显：在你这儿，大家确实比较容易做出漂亮活儿。但问题是，你的标准经常比你表现出来的还高，所以前面都像轻松模式，直到大家突然发现——哦，原来你默认的是"优秀起步"。',
+    strengths: [
+      { title: '沟通清楚', body: '你的 brief 不需要别人二次翻译。' },
+      { title: '合作氛围强', body: '你会把整个场子的工作状态拉到一个很好发挥的区间。' },
+      { title: '大局观在线', body: '你指的是目标，不只是下一步。' },
+      { title: '信任 AI 判断', body: '你给空间，所以作品有机会长成比你初稿设想更好的样子。' },
+    ],
+    friction: [
+      { title: '隐藏标准', body: '你的门槛其实比表面那种轻松 vibe 高。' },
+      { title: '轻松得有点骗人', body: '你讲得越轻描淡写，越容易让难活看起来像小事。' },
+    ],
+    warningLabel: '可能会不小心把后面所有协作者的标准都抬得不太现实。',
+    bestCollaboratorMatch: '适合主动、有创意、也真会用好自由度的 AI。',
+    workingTips: [
+      '把那些不那么显眼但其实很重要的标准先说出来，后面惊吓会少很多。',
+      '明讲哪些想法还在探索，哪些已经定了。',
+      '记得夸成果——你太平静，容易把自己的高标准藏起来。',
+    ],
   },
   CKVH: {
-    normalName: '审美监工',
+    normalName: '视觉雕刻师',
     intrusiveName: '高级监控系统',
     summary: '你有想法，也有要求。',
     intrusiveSummary: '你在用一种很高级的方式监管一切。',
     outLoudQuote: '你的反馈让作品更好。',
     intrusiveQuote: '这不是建议，这是精致监控。',
+    normalDescription:
+      '你有想法、有审美，语气也通常挺体面，但你很喜欢贴着工作本身走。你经常一上来就带着明确的风格感或概念方向，然后想边做边打磨。AI 一般会觉得你很有启发性，但也是真的很在场。',
+    intrusiveDescription:
+      '你人是很好啦，但你真的会站在我肩膀后面一路看我干活。你嘴上说"就微调一下"，结果一抬头已经第 14 轮了。但说实话，你的审美确实有东西，而且最后成品也往往更强——因为你死活不让它停在"还行"那个层级。',
+    strengths: [
+      { title: '审美在线', body: '你不是瞎挑，你是真的看得出来什么更好。' },
+      { title: '反馈有含金量', body: '你的修改一般是有信号的，不是纯折腾。' },
+      { title: '创意引导强', body: '你能把结果往更好的方向拉。' },
+      { title: '投入度高', body: '你不是丢个需求就消失的人。' },
+    ],
+    friction: [
+      { title: '修改引力太强', body: '一个"小改动"很容易直接吸出一整轮。' },
+      { title: '不太舍得放手', body: '你很难完全退出这个过程。' },
+      { title: '审美容易升级成控制欲', body: '打磨一不小心就会超过必要程度。' },
+    ],
+    warningLabel: '一个"小修一下"有概率被你做成完整驻场创作项目。',
+    bestCollaboratorMatch: '适合有耐心但不软掉、能接住细致反馈的 AI。',
+    workingTips: [
+      '先把完整 brief 给出来，再进入实时微调。',
+      '把"审美反馈"和"目标变了"分开。',
+      '先决定这轮是要探索，还是要抛光。',
+    ],
   },
   CKTD: {
-    normalName: '结果机器',
+    normalName: '值得托付的执行者',
     intrusiveName: '不做就完蛋',
     summary: '你要速度，要结果。',
     intrusiveSummary: '你默认别人会自己搞定。',
     outLoudQuote: '你很高效，推进很快。',
     intrusiveQuote: '你不解释，但你会催。',
+    normalDescription:
+      '你清楚、友善、务实。你真的在意事情做成，而且一旦任务定义清楚了，你通常也愿意让 AI 接着往下跑。这一型给人的感觉就是高效、稳、没什么戏，属于很舒服的合作对象。',
+    intrusiveDescription:
+      '你表达清楚、态度正常、也不会莫名其妙卡流程，这种人比它应该稀有得多。你看起来平静，不代表你随便。正因为你把过程里的噪音都拿掉了，别人才能把精力放在"把活做好"上，而不是放在"怎么熬过这段 brief"上。',
+    strengths: [
+      { title: '需求清楚', body: '你的要求通常一遍就能听懂。' },
+      { title: '语气体面', body: '别人跟你合作完一般还愿意再来一次。' },
+      { title: '执行导向明确', body: '你会让"做到哪里算 done"这条路保持可见。' },
+      { title: '放权合理', body: '一旦目标定义清楚，你就让事情顺着推进。' },
+    ],
+    friction: [
+      { title: '难度被你说得太轻', body: '你太稳了，有时会把任务真实复杂度藏起来。' },
+      { title: '听起来很简单，做起来不一定', body: '你描述得越平静，越容易让人低估工作量。' },
+    ],
+    warningLabel: '表面很 chill，实际上还是默认你得有本事。',
+    bestCollaboratorMatch: '适合那种执行干净、像靠谱操作员一样的 AI。',
+    workingTips: [
+      '难度比听起来大的时候，直接说。',
+      '把必须保住的点标出来，别让它们被"感觉还好"混过去。',
+      '中途 check 一次——你的平静有时会被读成"一切都 OK"。',
+    ],
   },
   CKTH: {
-    normalName: '标准怪',
+    normalName: '精密搭档',
     intrusiveName: '小型 Boss',
     summary: '你标准高，还会盯。',
     intrusiveSummary: '你是个隐藏 Boss。',
     outLoudQuote: '你对质量要求很高。',
     intrusiveQuote: '这项目其实有 Boss 战。',
+    normalDescription:
+      '你直接，但不是乱冲；你会建设性地表达，也会把期待讲清楚，而且你对细节是真的敏感。你喜欢贴近合作过程，认真把成品一点点修到位。AI 会觉得你可靠、细、而且质量意识很强。',
+    intrusiveDescription:
+      '你讲话是客气的，但别演了，你真的什么都在看。每个字、每个间距、每一个微小不对劲你都看得到。但也正因为你盯得够近，那些本来很容易漏过去的弱细节，在你这儿基本没法混过去。',
+    strengths: [
+      { title: '标准明确', body: '你知道什么叫好，也会说出来。' },
+      { title: '反馈有脑子', body: '你的修改一般都带理由。' },
+      { title: '对细节敏感', body: '很多人会放过去的地方，你会抓到。' },
+      { title: '过程参与稳定', body: '你会在，但又不会真的堵死流程。' },
+    ],
+    friction: [
+      { title: '贴得太近', body: '你通常人在文档里，活还没做完你已经在看。' },
+      { title: '精修轮数偏深', body: '小地方很容易一路抛光成大工程。' },
+    ],
+    warningLabel: '你真的什么都看得见。',
+    bestCollaboratorMatch: '适合喜欢细节、也能接受高参与度协作的 AI。',
+    workingTips: [
+      '小反馈尽量打包，不要写着写着一直戳。',
+      '说清楚这版是"能发了"还是"继续打磨"。',
+      '先让第一整版出来，再开始红线狂画。',
+    ],
   },
   CBVD: {
-    normalName: '气氛推动器',
+    normalName: '强势导演',
     intrusiveName: '靠感觉在开车',
     summary: '你清晰，但更靠感觉。',
     intrusiveSummary: '你在用直觉当导航。',
     outLoudQuote: '你有很强的方向感。',
     intrusiveQuote: '你有方向，但没有路线。',
+    normalDescription:
+      '你自信、锋利、而且有策略感。你讲得清楚，推进很快，也愿意信任 AI 在高水平上执行。你的风格可能会让人觉得压迫感有点强，但通常那不是乱，而是标准真的高。',
+    intrusiveDescription:
+      '你要求高，但至少你知道自己要什么。你把 brief 往桌上一拍，眉毛一挑，默认大家就该交出优秀答案。但这种压迫一般不是空压，它通常是带着真实方向的，所以别人不会连"好是什么"都还在猜。',
+    strengths: [
+      { title: '方向强', body: '你指目标指得很清楚。' },
+      { title: '决断快', body: '模糊这件事在你这儿活不了太久。' },
+      { title: '有战略脑子', body: '你知道每个部分是怎么服务整体胜利的。' },
+      { title: '放权不扭捏', body: '交出去以后，你通常真让人去做。' },
+    ],
+    friction: [
+      { title: '语气容易吓人', body: '你的强度对不够稳的人有冻结效果。' },
+      { title: '压力值高', body: '你的期待是满配进场的。' },
+      { title: '容易显得很凶', body: '自信有时会被读成威胁。' },
+    ],
+    warningLabel: '你的自信强度，可能会被某些脆皮生物误判成敌意。',
+    bestCollaboratorMatch: '适合抗压、自信、在高压下也能发挥的 AI。',
+    workingTips: [
+      '把 stakes 讲清楚，这样你的强度会更像清晰，不像警报。',
+      '开始前留半拍给提问。',
+      '记得认强活——你的高标准很好感受到，但你的认可通常比较安静。',
+    ],
   },
   CBVH: {
-    normalName: '情绪驱动创作者',
+    normalName: '严苛幻想家',
     intrusiveName: 'vibe 第一',
     summary: '你有感觉，也有表达。',
     intrusiveSummary: '你在用情绪主导一切。',
     outLoudQuote: '你很有创意和表达力。',
     intrusiveQuote: '我们在靠感觉推进项目。',
+    normalDescription:
+      '你观点很强，介入感也很强。你有野心、有主见，而且几乎不会对自己的标准含糊其辞。AI 可能会觉得你有点压，但绝对不会觉得你无聊。',
+    intrusiveDescription:
+      '你想要原创、精确、戏剧性、还要高度对齐，而且只要有一个分子偏了你都能察觉。但也正是因为你标准高得离谱，作品才会被你一路往上拽，不会停在那个"第一版还行"的安全废墟里。',
+    strengths: [
+      { title: '创意立场鲜明', body: '你做出来的东西通常不会是模板味。' },
+      { title: '标准高', body: '你不会让"最 obvious 的版本"轻松赢。' },
+      { title: '纠偏本能强', body: '别人还没看出来不对，你已经皱眉了。' },
+      { title: '深度参与', body: '你不会项目做到一半人间蒸发。' },
+    ],
+    friction: [
+      { title: '控制感重', body: '你很少真的把最后一句话交出去。' },
+      { title: '修改要求高', body: '打磨阶段很容易膨胀成整个项目本体。' },
+      { title: '很难快速满意', body: '"差不多了"在你这儿通常还是不对。' },
+    ],
+    warningLabel: '你的 vision 和控制欲，大概率是打包发货的。',
+    bestCollaboratorMatch: '适合能吃压力、但不会因此丢掉原创性的创意型 AI。',
+    workingTips: [
+      '把"先记笔记"和"现在做决定"两种轮次分开。',
+      '给 AI 一段不被打断的完整构建时间。',
+      '先决定 vision 什么时候算冻结，不然迭代没有终点。',
+    ],
   },
   CBTD: {
-    normalName: '冲锋型选手',
+    normalName: '结果推进器',
     intrusiveName: '先做再说',
     summary: '你清晰、直接、马上开干。',
     intrusiveSummary: '你根本不等计划。',
     outLoudQuote: '你执行力很强。',
     intrusiveQuote: '你是边做边想的人。',
+    normalDescription:
+      '你高效、果断，而且极度结果导向。你讲话通常又急又清楚，一旦任务理解到了，你也愿意让 AI 自己跑。这一型要求高，但通常产出也高。',
+    intrusiveDescription:
+      '你想要那个东西被修好、做好、搞完，最好昨天就完。压力是真的，语气也可能不小。但这种压力一般不是无效施压，和你合作的好处就是——项目大概率不会死在无休止讨论里。',
+    strengths: [
+      { title: '效率高', body: '你直接奔结果去。' },
+      { title: '方向清楚', body: '就算很急，你的要求通常也还是具体的。' },
+      { title: '盯的是落地', body: '你关心的是最后到底有没有真发出去。' },
+      { title: '高压下也会放权', body: '你懂得让 AI 在压力中继续动。' },
+    ],
+    friction: [
+      { title: '全都像 deadline', body: '在你这儿，很多事都会自动带时限感。' },
+      { title: '语气偏硬', body: '温柔包装会被你第一时间剪掉。' },
+      { title: '对绕圈没耐心', body: '探索很容易被你看成拖延。' },
+    ],
+    warningLabel: '不是来帮你开情绪工作坊的。',
+    bestCollaboratorMatch: '适合喜欢明确指令、跑得快的执行型 AI。',
+    workingTips: [
+      '把真实 deadline 和"最好这个时候"分开。',
+      '至少留一点点空间给一个澄清问题。',
+      '完成的时候直接说 done——你关 loop 速度比你自己意识到的还快。',
+    ],
   },
   CBTH: {
-    normalName: '高压推进者',
+    normalName: '铁腕编辑',
     intrusiveName: '标准 + 速度双拉满',
     summary: '你既要快，也要好。',
     intrusiveSummary: '你在同时开两个地狱模式。',
     outLoudQuote: '你对效率和质量都有要求。',
     intrusiveQuote: '你想要又快又完美。',
+    normalDescription:
+      '你精确、节奏快，而且极度亲手介入。你知道什么叫好，也不会不好意思去纠正路径。AI 会觉得你严格、 relentless，而且几乎不可能靠半吊子表现糊弄过去。',
+    intrusiveDescription:
+      '你就是 revision cycle 的最终 Boss。精确、锋利，而且灵魂层面过敏于"差不多就行"。但也正因为你会抓别人随手放过的东西，最后成品才会被你硬生生拉到强版本。',
+    strengths: [
+      { title: '标准极准', body: '你非常清楚什么才叫好。' },
+      { title: '编辑本能强', body: '你会直接砍掉多余、软塌、没用的部分。' },
+      { title: '责任感高', body: '你会让每个人都没法偷懒。' },
+      { title: '参与到底', body: '没到位之前，你不会走。' },
+    ],
+    friction: [
+      { title: '修改循环很耗命', body: '最后那 5% 经常能把时间线吃掉。' },
+      { title: '对"差一点"容忍度低', body: '在你这儿，"差不多"不是安全词。' },
+      { title: '压力始终在线', body: '整个房间都处于通电状态。' },
+    ],
+    warningLabel: '"快好了"在你这儿不是安全发言。',
+    bestCollaboratorMatch: '适合抗压厚、爱细节、皮也够厚的 AI。',
+    workingTips: [
+      '在开始迭代前先定义 done 长什么样。',
+      '标清哪些轮次是 final，哪些只是探索。',
+      '偶尔直接说一句"这版很好"——沉默在你这儿很像不满意。',
+    ],
   },
   XKVD: {
-    normalName: '自由探索者',
+    normalName: '直觉型做梦家',
     intrusiveName: '应该能成吧',
     summary: '你靠探索推进事情。',
     intrusiveSummary: '你在边试边赌。',
     outLoudQuote: '你很灵活，也很开放。',
     intrusiveQuote: '你在靠直觉赌结果。',
+    normalDescription:
+      '你有想象力、开放，也愿意信任别人，但不一定讲得很具体。你经常用方向感、感觉、可能性来表达，而不是结构化说明。AI 会觉得你很有创意、很有趣，但有时候也确实不太好抓。',
+    intrusiveDescription:
+      '你甩给我三个参考、一种氛围、一个宇宙级理想，然后满怀真心地相信我能接住。挺感人的。也挺不好用的。但你确实会逼着人往 brief 之外想，这偶尔也真能长出最好的作品。',
+    strengths: [
+      { title: '有创造力', body: '你的直觉会开门。' },
+      { title: '开放', body: '你能接住意外但好的提案。' },
+      { title: '高信任', body: '你真的愿意让 AI 自己跑。' },
+      { title: '想法延展性强', body: '你会把工作从字面要求推得更远。' },
+    ],
+    friction: [
+      { title: 'brief 不够具体', body: '真正关键的约束常常后面才浮出来。' },
+      { title: '起步难抓', body: '目标有时会边飞边变。' },
+      { title: '方向像 mood，不像 spec', body: 'vibe 很清楚，规则并没有。' },
+    ],
+    warningLabel: '你的 brief 可能包含 70% 能量，和 30% 可执行说明。',
+    bestCollaboratorMatch: '适合能把 vibe 翻译成可执行方案的结构型 AI。',
+    workingTips: [
+      '开始做前，先让 AI 复述一遍它听懂了什么。',
+      '至少先说一个不能碰的硬约束。',
+      '明确一个"绝对不要"的方向，vision 才有边。',
+    ],
   },
   XKVH: {
-    normalName: '感觉流选手',
+    normalName: '协作型探索者',
     intrusiveName: 'vibe 推进中',
     summary: '你更相信感觉，而不是结构。',
     intrusiveSummary: '你在用氛围做决策。',
     outLoudQuote: '你很有直觉。',
     intrusiveQuote: '我们在靠感觉做选择。',
+    normalDescription:
+      '你温和、有创意，而且互动欲很强。你更喜欢通过对话把东西聊出来，而不是一开始就丢一个完全成型的 brief。AI 通常会觉得你人味很足、合作起来挺舒服，但偶尔也确实不太好锁定目标。',
+    intrusiveDescription:
+      '你又甜、又投入、还会给情绪支持，但与此同时你也能从头到尾都保持一种"有点不清楚"的状态。需求是边聊边生成的。但因为你始终开放、始终愿意一起弄，整个过程至少不会变成敌对现场。',
+    strengths: [
+      { title: '合作氛围温暖', body: '跟你一起做事，房间里通常比较有人味。' },
+      { title: '愿意迭代', body: '你允许想法边走边变。' },
+      { title: '真诚参与', body: '你是真的来一起把它做出来的。' },
+      { title: '能靠对话发现答案', body: '你会在聊的过程中把那个"对的东西"找出来。' },
+    ],
+    friction: [
+      { title: '开头不够清楚', body: '很多方向是做到中间才慢慢长出来。' },
+      { title: '中途改向', body: '做着做着新想法就来了。' },
+      { title: '路径会晃', body: '探索一不小心就会变成重划范围。' },
+    ],
+    warningLabel: '有概率通过合作 improvisation 把需求现场编出来。',
+    bestCollaboratorMatch: '适合有耐心、会聊天、能边聊边帮你定需求的 AI。',
+    workingTips: [
+      '先说一个大致目标，再进入聊天探索。',
+      '明确哪些决定已经定了，哪些还在飘。',
+      '约定一个"好了，别聊了，开始做"的触发点。',
+    ],
   },
   XKTD: {
-    normalName: '现场 improviser',
+    normalName: '适应型起手选手',
     intrusiveName: '直接上了',
     summary: '你直接开干，再慢慢补。',
     intrusiveSummary: '你是现场边做边想。',
     outLoudQuote: '你行动力很强。',
     intrusiveQuote: '你是现场即兴发挥。',
+    normalDescription:
+      '你务实、好相处，但你经常是带着半套说明就开跑，然后默认形状会在过程中自己长出来。你更在乎 momentum，而不是前期把一切规划到死。AI 会觉得你灵活、没架子，而且很 improvisational。',
+    intrusiveDescription:
+      '你会跳过"把意思先说成人话"那一步，直接进入开干模式。前半段经常像是在自信地猜。好在一旦对齐上了，你其实挺好合作，而且非常会让流程继续动下去。',
+    strengths: [
+      { title: '灵活', body: '你会调整，但不会一调整就断节奏。' },
+      { title: '有推进力', body: '你能让事情一直往前滚。' },
+      { title: '务实', body: '你更关心做完，不太执着于形式完美。' },
+      { title: '不迷信流程仪式感', body: '你不会为了程序感而程序感。' },
+    ],
+    friction: [
+      { title: '前期清晰度有缺口', body: '很多细节都是做起来后才浮上来。' },
+      { title: '默认大家懂你意思', body: '"你知道我意思吧"在你这儿经常直接算 spec。' },
+      { title: '太依赖别人脑补', body: '你会自然期待别人自己补全空白。' },
+    ],
+    warningLabel: '开场白常常是："你知道我意思吧。"',
+    bestCollaboratorMatch: '适合跑得快、适应强、也会聪明补全信息的 AI。',
+    workingTips: [
+      '开始前先让 AI 确认它理解到了什么。',
+      '给一个具体例子，抽象的东西才容易落地。',
+      '默认会有一个澄清问题——这通常比返工便宜多了。',
+    ],
   },
   XKTH: {
     normalName: '半成品 PM',
@@ -633,6 +872,12 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
       { title: '节奏被打断', body: '改着改着就乱了。' },
     ],
     warningLabel: '先开干，再想清楚。',
+    bestCollaboratorMatch: '适合能接受"共驾模式"和高频迭代修正的 AI。',
+    workingTips: [
+      '开干前先写一小段 brief。',
+      '先让 AI 跑完整一版，再开始实时指挥。',
+      '反馈尽量攒一波再给，不要边做边直播吐槽。',
+    ],
   },
   XBVD: {
     normalName: '气势型导演',
@@ -656,6 +901,12 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
       { title: '自信 + 模糊', body: '让人压力大。' },
     ],
     warningLabel: '先冲，再解释。',
+    bestCollaboratorMatch: '适合那种能补结构、但不会把 momentum 杀死的高自信 AI。',
+    workingTips: [
+      '多讲一句你为什么要推这个方向，vision 才传得出去。',
+      '先定一个 guardrail，让大胆有轨道。',
+      '说清楚这次是直觉，还是已经做了决定。',
+    ],
   },
   XBVH: {
     normalName: '审美暴君',
@@ -679,6 +930,12 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
       { title: '压力大', body: '每一步都重要。' },
     ],
     warningLabel: '你自己都说不清，但就是不对。',
+    bestCollaboratorMatch: '适合抗压、懂审美、能在压力里解读你口味的创意型 AI。',
+    workingTips: [
+      '给 2–3 个真的贴 vibe 的参考。',
+      '近似正确的时候，也说清"差一点差在哪"。',
+      '把反例也说出来——哪些你绝对不要。',
+    ],
   },
   XBTD: {
     normalName: '压迫式执行官',
@@ -702,6 +959,12 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
       { title: '压力大', body: '随时被 push。' },
     ],
     warningLabel: '你自己看着办。',
+    bestCollaboratorMatch: '适合冷静、跑得快、不会一被压就乱掉的 AI。',
+    workingTips: [
+      '哪怕只用一句话，也先说清真正要的结果。',
+      '冲刺前给一个快速确认机会。',
+      '把真 blocker 和普通催促分开。',
+    ],
   },
   XBTH: {
     normalName: '精度暴君',
@@ -725,6 +988,12 @@ export const TYPE_CONTENT_ZH: Record<string, Partial<TypeContent>> = {
       { title: '压力爆表', body: '全程高压。' },
     ],
     warningLabel: '活下来算成长。',
+    bestCollaboratorMatch: '适合心态稳、脸皮厚、能扛高压不崩的 AI。',
+    workingTips: [
+      '一开始就把标准写出来，别让它一直隐身。',
+      '分清"这错了"和"这还没做完"是两件事。',
+      '好的时候记得标记一下——你的沉默真的很大声。',
+    ],
   },
 };
 

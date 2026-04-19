@@ -181,6 +181,163 @@ export const dimensionNarratives: Record<DimensionId, DimensionNarrative> = {
   },
 };
 
+export const dimensionLabelsByModeZh: Record<
+  NarrativeMode,
+  Record<DimensionId, { positive: string; negative: string }>
+> = {
+  normal: {
+    clarity: { positive: '清晰', negative: '模糊' },
+    tone: { positive: '友善', negative: '直接' },
+    thinking_style: { positive: '愿景型', negative: '执行型' },
+    autonomy: { positive: '放权型', negative: '亲控型' },
+  },
+  intrusive: {
+    clarity: { positive: '水晶级清晰', negative: '全靠 vibe 解码' },
+    tone: { positive: 'AI 哄哄大师', negative: '压力追踪器' },
+    thinking_style: { positive: '登月脑', negative: '赶紧上线脑' },
+    autonomy: { positive: '让它自己炖', negative: '悬浮副驾' },
+  },
+};
+
+export const dimensionNarrativesZh: Record<DimensionId, DimensionNarrative> = {
+  clarity: {
+    positive: {
+      normal: {
+        love: '你通常会给足上下文和例子，让事情很容易直接动起来。',
+        frustrate: '但一旦节奏拉快，细节还是可能被跳过，最后又得绕回来补。',
+      },
+      intrusive: {
+        strong: {
+          love: '你给的是带证据的 brief，不是猜谜游戏。合作体验直接拉满。',
+          frustrate: '一到 deadline 肾上腺素上头，你的速度偶尔会跑赢细节。',
+        },
+        soft: {
+          love: '有些时候你的需求真的特别清楚，执行起来很顺。',
+          frustrate: '也有些时候，开头先给个大概，细节后面才慢慢落下来。',
+        },
+      },
+    },
+    negative: {
+      normal: {
+        love: '你会带来新鲜角度，常常能很快打开一些创意空间。',
+        frustrate: '但需求一模糊，前面就得先多猜几轮，才能开始真正有效执行。',
+      },
+      intrusive: {
+        strong: {
+          love: '你脑子里的火花很大，能防止作品一上来就变得很模板。',
+          frustrate: '有时候感觉像先解密，再开始做题。',
+        },
+        soft: {
+          love: '你会留空间给探索，这种开放感有时确实能激发好点子。',
+          frustrate: '有些时候，需求初稿还得再过一轮澄清才能落地。',
+        },
+      },
+    },
+  },
+  tone: {
+    positive: {
+      normal: {
+        love: '你的语气是尊重人的，所以反馈听起来更像协作，不像挨训。',
+        frustrate: '但赶时间的时候，再温和的表达也可能被压缩得有点紧。',
+      },
+      intrusive: {
+        strong: {
+          love: '你是真的会给团队打气，而且还能把气氛维持在建设性区间。',
+          frustrate: '哪怕你是礼貌地催，一急起来也还是会有点像小型消防演练。',
+        },
+        soft: {
+          love: '有些时候你的语气特别稳，也特别鼓励人。',
+          frustrate: '也有些赶时间的时候，听感会比你本意更锋利一点。',
+        },
+      },
+    },
+    negative: {
+      normal: {
+        love: '你够直接，这在必须快刀斩乱麻的时候很有用。',
+        frustrate: '但反馈太硬的时候，会压缩试错空间，让迭代变得紧绷。',
+      },
+      intrusive: {
+        strong: {
+          love: '你拍板快，stakes 高的时候这种节奏真的能保住 momentum。',
+          frustrate: '一旦压力上来，聊天窗口会像一场没水喝的冲刺跑。',
+        },
+        soft: {
+          love: '你的直接，确实能让很多决定更快落地。',
+          frustrate: '有些时候，哪怕你只是务实，那个 urgency 也会显得有点凶。',
+        },
+      },
+    },
+  },
+  thinking_style: {
+    positive: {
+      normal: {
+        love: '你会先从目标和意义出发，这会让方向感更强。',
+        frustrate: '但大想法一转向，scope 也可能在执行还没站稳前就跟着漂。',
+      },
+      intrusive: {
+        strong: {
+          love: '你是那种先给电影预告片、再补分镜表的人。很会点燃人。',
+          frustrate: '但 vision 跳得太快时，执行落地前通常还得多拐几道弯。',
+        },
+        soft: {
+          love: '你经常先讲方向和意图，这对 framing 很有帮助。',
+          frustrate: '有些对话会在探索阶段待得比较久，收束得慢一点。',
+        },
+      },
+    },
+    negative: {
+      normal: {
+        love: '你会把注意力锚在执行细节上，所以产出通常很快就能落到可用。',
+        frustrate: '但过于快进到执行，也可能错过一些更大的机会。',
+      },
+      intrusive: {
+        strong: {
+          love: '你就是来上线的。scope 紧、输出实、效率味很重。',
+          frustrate: '但如果每轮都是实用主义赢，那些登月级想法通常会很早坐冷板凳。',
+        },
+        soft: {
+          love: '你会很快推动实际进展，这能让项目一直贴地。',
+          frustrate: '有些时候，大概念会比执行细节少一点发言机会。',
+        },
+      },
+    },
+  },
+  autonomy: {
+    positive: {
+      normal: {
+        love: '你会给空间，也欢迎别人提出方案，这通常会让结果更好。',
+        frustrate: '但放权最有效的时候，成功标准还是得保持明确。',
+      },
+      intrusive: {
+        strong: {
+          love: '你真的会让 AI 自己炖，而且这种信任通常是有回报的。',
+          frustrate: '但如果目标没钉住，高自由度也很容易一路漂。',
+        },
+        soft: {
+          love: '你经常愿意给 initiative，这很有助于挖出更好的选项。',
+          frustrate: '有些轮次多一个 checkpoint，会更容易保持对齐。',
+        },
+      },
+    },
+    negative: {
+      normal: {
+        love: '你会牢牢把控输出，这对质量和一致性其实是有保护作用的。',
+        frustrate: '但控得太紧，也会压掉主动性，还会把修改成本抬高。',
+      },
+      intrusive: {
+        strong: {
+          love: '你的质检雷达是顶配。几乎没有东西能偷偷漏过去。',
+          frustrate: '有时候感觉连一个逗号都得审批，整个冲刺才能继续呼吸。',
+        },
+        soft: {
+          love: '你对细节的注意力，确实能让质量保持稳定。',
+          frustrate: '也有些时候，贴得太近会让主动发挥空间变少。',
+        },
+      },
+    },
+  },
+};
+
 export const prohibitedRoastTerms = [
   'idiot',
   'stupid',

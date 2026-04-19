@@ -121,10 +121,11 @@ export function ResultsExperience({
         strongestSignals: result.strongestSignals,
         tieFlags: result.tieFlags,
         mode,
+        lang,
       }),
-    [mode, result.dimensionBreakdown, result.strongestSignals, result.tieFlags, result.typeCode],
+    [mode, lang, result.dimensionBreakdown, result.strongestSignals, result.tieFlags, result.typeCode],
   );
-  const dimensionLabels = useMemo(() => getDimensionLabels(mode), [mode]);
+  const dimensionLabels = useMemo(() => getDimensionLabels(mode, lang), [mode, lang]);
   useEffect(() => {
     if (profileCopy.moderation.rewriteCount <= 0) {
       return;
@@ -330,15 +331,6 @@ export function ResultsExperience({
             })}
           </div>
         </section>
-
-        {lang === 'zh' ? (
-          <p
-            className="tea-rise-in rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-slate-300/85"
-            style={{ animationDelay: '170ms' }}
-          >
-            {t('results.englishOnlyNote')}
-          </p>
-        ) : null}
 
         {/* 4. Main read */}
         <section
