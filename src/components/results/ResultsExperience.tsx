@@ -286,11 +286,19 @@ export function ResultsExperience({
             >
               Agent Tea dossier
             </p>
-            <h1
-              className="mt-5 text-6xl font-black tracking-tight sm:text-7xl"
-              aria-label={result.typeCode}
-            >
-              {result.typeCode}
+            <h1 className="mt-5 flex gap-2 sm:gap-3" aria-label={result.typeCode}>
+              {result.typeCode.split('').map((letter, index) => (
+                <span
+                  key={`${letter}-${index}`}
+                  className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-900/60 text-4xl font-black tracking-tight ring-2 backdrop-blur transition-colors duration-500 sm:h-20 sm:w-20 sm:text-5xl ${
+                    isIntrusive
+                      ? 'ring-rose-400/70 shadow-[0_0_40px_-8px_rgba(244,63,94,0.7)]'
+                      : 'ring-cyan-300/60 shadow-[0_0_40px_-8px_rgba(34,211,238,0.6)]'
+                  }`}
+                >
+                  {letter}
+                </span>
+              ))}
             </h1>
             <p
               className={`mt-3 text-3xl font-bold transition-colors sm:text-4xl ${
@@ -300,7 +308,13 @@ export function ResultsExperience({
               {displayName}
             </p>
             <p className="mt-1 text-sm italic text-slate-300/80">aka {akaName}</p>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">{typeContent.summary}</p>
+            <p
+              key={mode}
+              className="tea-rise-in mt-6 max-w-2xl text-lg leading-8 text-slate-200"
+              style={{ animationDuration: '380ms' }}
+            >
+              {isIntrusive ? typeContent.intrusiveSummary : typeContent.summary}
+            </p>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300/80">{profileCopy.oneLiner}</p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -360,18 +374,12 @@ export function ResultsExperience({
         >
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-orange-400/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-rose-400/10 blur-3xl" />
-          <div className="relative grid gap-6 md:grid-cols-2">
+          <div className="relative">
             <QuoteBlock
-              label="Out loud"
-              quote={typeContent.outLoudQuote}
-              accent="cyan"
-              dimmed={isIntrusive}
-            />
-            <QuoteBlock
-              label="Intrusive thoughts"
-              quote={typeContent.intrusiveQuote}
-              accent="rose"
-              dimmed={!isIntrusive}
+              key={mode}
+              label={isIntrusive ? 'Intrusive thoughts' : 'Out loud'}
+              quote={isIntrusive ? typeContent.intrusiveQuote : typeContent.outLoudQuote}
+              accent={isIntrusive ? 'rose' : 'cyan'}
             />
           </div>
           <div className="relative mt-6 flex flex-wrap items-center justify-end gap-3">
@@ -752,12 +760,10 @@ function QuoteBlock({
   label,
   quote,
   accent,
-  dimmed,
 }: {
   label: string;
   quote: string;
   accent: 'cyan' | 'rose';
-  dimmed: boolean;
 }) {
   const accentBorder = accent === 'cyan' ? 'border-cyan-200/30' : 'border-rose-300/30';
   const accentText = accent === 'cyan' ? 'text-cyan-200' : 'text-rose-200';
@@ -768,9 +774,8 @@ function QuoteBlock({
 
   return (
     <figure
-      className={`relative rounded-2xl border ${accentBorder} bg-slate-950/40 p-5 transition-opacity duration-500 ${
-        dimmed ? 'opacity-55' : `opacity-100 ${accentGlow}`
-      }`}
+      className={`tea-rise-in relative rounded-2xl border ${accentBorder} bg-slate-950/40 p-5 ${accentGlow}`}
+      style={{ animationDuration: '380ms' }}
     >
       <figcaption
         className={`text-[10px] font-bold uppercase tracking-[0.3em] ${accentText}`}

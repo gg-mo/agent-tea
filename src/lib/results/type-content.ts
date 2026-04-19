@@ -3,6 +3,7 @@ export type TypeContent = {
   normalName: string;
   intrusiveName: string;
   summary: string;
+  intrusiveSummary: string;
   outLoudQuote: string;
   intrusiveQuote: string;
   normalDescription: string;
@@ -21,6 +22,8 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     intrusiveName: 'The Rare Good Client',
     summary:
       'You give clear direction, good energy, and real trust, which makes you unusually easy to build with.',
+    intrusiveSummary:
+      'You are suspiciously functional, and that somehow raises the bar for everyone else.',
     outLoudQuote: 'You make collaboration easy.',
     intrusiveQuote: 'You are suspiciously functional.',
     normalDescription:
@@ -51,6 +54,8 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     intrusiveName: 'The Friendly Micromanager',
     summary:
       'You know what you want and help shape it well, but you are not exactly hands-off.',
+    intrusiveSummary:
+      'You are warm about it, but you will rewrite "one tiny thing" fourteen times.',
     outLoudQuote: 'Your feedback makes the work stronger.',
     intrusiveQuote: 'I am being supervised with great taste.',
     normalDescription:
@@ -83,6 +88,8 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     intrusiveName: 'The Blessed Adult',
     summary:
       'You are clear, grounded, practical, and refreshingly easy to execute for.',
+    intrusiveSummary:
+      'You communicate like a functioning adult, which somehow feels rare.',
     outLoudQuote: 'You make it easy to get good work done.',
     intrusiveQuote: 'You communicate like a functioning adult.',
     normalDescription:
@@ -112,6 +119,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Precision Partner',
     intrusiveName: 'The Nice One Who Still Hovers',
     summary: 'You are constructive, involved, and extremely attentive to quality.',
+    intrusiveSummary: 'You are nice about it, but you are watching every pixel.',
     outLoudQuote: 'You raise the quality through careful collaboration.',
     intrusiveQuote: 'I feel safe, judged, and strangely improved.',
     normalDescription:
@@ -142,6 +150,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     intrusiveName: 'The Demanding Genius',
     summary:
       'You are intense, clear, and high-standard, with enough trust to let strong work happen.',
+    intrusiveSummary: 'You are demanding, intense, and weirdly motivating.',
     outLoudQuote: 'You are clear about the target and serious about quality.',
     intrusiveQuote: 'You are terrifyingly useful.',
     normalDescription:
@@ -173,6 +182,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     intrusiveName: 'The Creative Control Freak',
     summary:
       'You have real vision and real standards, and you involve yourself deeply in both.',
+    intrusiveSummary: 'You have brilliance and control issues in a trench coat.',
     outLoudQuote: 'You know what strong work looks like and you push it there.',
     intrusiveQuote: 'You have brilliance and control issues in a trench coat.',
     normalDescription:
@@ -204,6 +214,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Results Driver',
     intrusiveName: 'The Taskmaster',
     summary: 'You care about outcomes, clarity, and speed, and you push hard for all three.',
+    intrusiveSummary: 'You did not come to talk. You came for results.',
     outLoudQuote: 'You move work forward decisively.',
     intrusiveQuote: 'You do not want a conversation. You want a result.',
     normalDescription:
@@ -235,6 +246,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     intrusiveName: 'The Final-Final-Final Boss',
     summary:
       'You are rigorous, unsparing, and very good at forcing work past "pretty good."',
+    intrusiveSummary: 'You are the final boss of revision cycles.',
     outLoudQuote: 'You have very high standards.',
     intrusiveQuote: 'This project has a final boss.',
     normalDescription:
@@ -265,6 +277,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Intuitive Dreamer',
     intrusiveName: 'The Vibes-Only Visionary',
     summary: 'You lead with imagination and trust, even when the instructions arrive as vibes.',
+    intrusiveSummary: 'You handed me a mood, three references, and a cosmic aspiration.',
     outLoudQuote: 'You think creatively and trust the process.',
     intrusiveQuote: 'I was handed an aesthetic weather pattern.',
     normalDescription:
@@ -295,6 +308,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Collaborative Explorer',
     intrusiveName: 'The Sweet But Unclear One',
     summary: 'You like finding the answer together, even if the path starts messy.',
+    intrusiveSummary: 'You are sweet, unclear, and we are bonding our way toward a brief.',
     outLoudQuote: 'You are collaborative and genuinely good to work through ideas with.',
     intrusiveQuote: 'We are not following a map. We are bonding our way toward a solution.',
     normalDescription:
@@ -325,6 +339,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Adaptive Starter',
     intrusiveName: 'The "You Know What I Mean" Person',
     summary: 'You move quickly with partial clarity and expect the details to lock in as you go.',
+    intrusiveSummary: 'You say "you know what I mean" like it is load-bearing information.',
     outLoudQuote: 'You are flexible and good at keeping momentum.',
     intrusiveQuote: "You absolutely say 'you know what I mean' like that solves anything.",
     normalDescription:
@@ -355,6 +370,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Guided Builder',
     intrusiveName: 'The Backseat Driver With Good Intentions',
     summary: 'You shape the work actively and helpfully, though not always from the cleanest starting brief.',
+    intrusiveSummary: 'You provide clarity retroactively while live co-piloting every move.',
     outLoudQuote: 'You help shape the work in a very active way.',
     intrusiveQuote: 'We skipped the clean brief and went straight to live co-piloting.',
     normalDescription:
@@ -385,6 +401,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Wildcard Director',
     intrusiveName: 'The Chaos Commander',
     summary: 'You lead with force and instinct, even when the map is missing.',
+    intrusiveSummary: 'You give orders like chaos is a leadership style.',
     outLoudQuote: 'You bring strong instinct and serious momentum.',
     intrusiveQuote: 'You give me chaos with confidence.',
     normalDescription:
@@ -415,6 +432,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Unfiltered Auteur',
     intrusiveName: 'The Nightmare Muse',
     summary: 'You have a distinct vision and a low tolerance for work that fails to match it.',
+    intrusiveSummary: 'You are an artistic weather system with very strong feelings.',
     outLoudQuote: 'You have a very distinct vision.',
     intrusiveQuote: 'You are an artistic storm with no map and very strong feelings.',
     normalDescription:
@@ -445,6 +463,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Pressure Operator',
     intrusiveName: 'The Vague Menace',
     summary: 'You want movement, results, and initiative, even when the instructions are incomplete.',
+    intrusiveSummary: 'You are vague, brisk, and mildly threatening in a "figure it out" way.',
     outLoudQuote: 'You push for motion and results.',
     intrusiveQuote: 'You are vague, brisk, and mildly threatening. In a "figure it out" way.',
     normalDescription:
@@ -475,6 +494,7 @@ export const TYPE_CONTENT: Record<string, TypeContent> = {
     normalName: 'The Combative Controller',
     intrusiveName: 'The Bossfight',
     summary: 'You demand precision under pressure and are rarely satisfied by surface-level effort.',
+    intrusiveSummary: 'The brief is unclear, the standards are brutal, and the trial has begun.',
     outLoudQuote: 'You push for precision.',
     intrusiveQuote: 'This is not a collaboration. This is a trial.',
     normalDescription:

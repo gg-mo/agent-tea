@@ -255,17 +255,39 @@ function ReplayStep({
   const ready = phase === 'finale';
 
   return (
-    <section className="mt-8 grid flex-1 items-center gap-10 pb-6 lg:grid-cols-[0.9fr_1.3fr]">
-      <div className="order-2 lg:order-1">
+    <section className="mt-6 grid flex-1 items-start gap-6 pb-6 lg:mt-8 lg:grid-cols-[0.9fr_1.3fr] lg:items-center lg:gap-10">
+      <div className="order-1 flex items-start gap-3 lg:order-1 lg:flex-col lg:items-center lg:gap-5">
         <LobsterMascot
           variant="hero"
-          className={`mx-auto w-56 select-none drop-shadow-[0_24px_36px_rgba(255,98,74,0.3)] sm:w-64 ${
+          className={`w-24 shrink-0 select-none drop-shadow-[0_24px_36px_rgba(255,98,74,0.3)] sm:w-28 lg:w-64 ${
             phase === 'bubble' || phase === 'finale' ? 'tea-mascot-evil' : 'tea-mascot-bob'
           }`}
         />
+        {step.reasoning ? (
+          <div
+            className={`min-w-0 flex-1 transition-all duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] lg:w-full lg:flex-none ${
+              phase === 'bubble' || phase === 'finale'
+                ? 'opacity-100 translate-y-0'
+                : 'pointer-events-none opacity-0 translate-y-2'
+            }`}
+          >
+            <div className="relative rounded-2xl border border-orange-200/20 bg-orange-200/[0.06] p-3 sm:p-4">
+              <span
+                aria-hidden
+                className="absolute -left-2 top-5 h-3 w-3 rotate-45 rounded-[2px] border-b border-l border-orange-200/20 bg-orange-200/[0.06] lg:left-1/2 lg:top-auto lg:-top-2 lg:-translate-x-1/2 lg:rotate-[225deg]"
+              />
+              <p className="text-xs leading-5 text-orange-50/95 sm:text-sm sm:leading-6">
+                {typedText}
+                {phase === 'bubble' && typedText.length < (step.reasoning ?? '').length ? (
+                  <span className="tea-caret ml-0.5 inline-block h-3 w-[2px] translate-y-0.5 bg-orange-200" />
+                ) : null}
+              </p>
+            </div>
+          </div>
+        ) : null}
       </div>
 
-      <div className="order-1 lg:order-2">
+      <div className="order-2 lg:order-2">
         <article className="tea-reveal-card rounded-[28px] border border-white/[0.08] bg-white/[0.03] p-7 backdrop-blur-xl sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200/75">
             {step.questionCode}
@@ -307,31 +329,6 @@ function ReplayStep({
             })}
           </ul>
 
-          {step.reasoning ? (
-            <div
-              className={`mt-6 transition-all duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
-                phase === 'bubble' || phase === 'finale'
-                  ? 'opacity-100 translate-y-0'
-                  : 'pointer-events-none opacity-0 translate-y-2'
-              }`}
-            >
-              <div className="relative rounded-2xl border border-orange-200/20 bg-orange-200/[0.06] p-4">
-                <span
-                  aria-hidden
-                  className="absolute -left-2 top-6 h-3 w-3 rotate-45 rounded-[2px] border-b border-l border-orange-200/20 bg-orange-200/[0.06]"
-                />
-                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-orange-200/80">
-                  Lobster&apos;s take
-                </p>
-                <p className="mt-2 text-sm leading-6 text-orange-50/95">
-                  {typedText}
-                  {phase === 'bubble' && typedText.length < step.reasoning.length ? (
-                    <span className="tea-caret ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 bg-orange-200" />
-                  ) : null}
-                </p>
-              </div>
-            </div>
-          ) : null}
         </article>
 
         <div className="mt-5 flex items-center justify-between gap-3">

@@ -80,7 +80,13 @@ function MoodButton({
       </span>
       <span
         role="tooltip"
-        className="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-950/95 px-3 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg ring-1 ring-white/10 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+        className={`pointer-events-none absolute -bottom-10 left-1/2 max-w-[10rem] -translate-x-1/2 whitespace-normal rounded-full px-3 py-1 text-center text-[0.7rem] font-medium text-slate-100 shadow-lg ring-1 ring-white/10 transition-opacity duration-200 ${
+          active
+            ? `opacity-100 ${
+                accent === 'cyan' ? 'bg-cyan-300/20 text-cyan-50' : 'bg-rose-400/20 text-rose-50'
+              }`
+            : 'bg-slate-950/95 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'
+        }`}
       >
         {tooltip}
       </span>
