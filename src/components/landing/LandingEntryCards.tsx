@@ -469,9 +469,30 @@ export function LandingEntryCards() {
               value={encodedPayload}
               onChange={(event) => setEncodedPayload(event.target.value)}
               placeholder="AT1|Q01-5AQ02-4AQ03-3..."
-              className="tea-press mt-4 h-28 w-full rounded-2xl border border-white/[0.08] bg-black/40 px-4 py-3 font-mono text-[0.85rem] text-slate-100 outline-none focus:border-white/20 focus:bg-black/50"
+              autoCapitalize="off"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              inputMode="text"
+              className="mt-4 h-28 w-full rounded-2xl border border-white/[0.08] bg-black/40 px-4 py-3 font-mono text-base text-slate-100 outline-none focus:border-white/20 focus:bg-black/50"
             />
-            <div className="mt-4">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    if (navigator.clipboard?.readText) {
+                      const text = await navigator.clipboard.readText();
+                      if (text) setEncodedPayload(text.trim());
+                    }
+                  } catch {
+                    // Clipboard permission denied — user can long-press paste instead.
+                  }
+                }}
+                className="tea-press inline-flex rounded-full border border-white/15 bg-white/[0.06] px-5 py-2.5 text-[0.875rem] font-medium text-slate-100 hover:bg-white/[0.1]"
+              >
+                Paste from clipboard
+              </button>
               <button
                 type="button"
                 onClick={decodeChatbotPayload}
