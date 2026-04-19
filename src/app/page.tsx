@@ -5,8 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import { LandingEntryCards } from '@/components/landing/LandingEntryCards';
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
 import { SocialProofPreview } from '@/components/landing/SocialProofPreview';
+import { useI18n } from '@/lib/i18n/I18nProvider';
 
 export default function Home() {
+  const { t } = useI18n();
   const [showEntryCards, setShowEntryCards] = useState(false);
   const entrySectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,14 +62,14 @@ export default function Home() {
           }`}
         >
           <section className="tea-lines">
-            <p className="tea-eyebrow w-fit text-cyan-200/90">Agent Tea</p>
+            <p className="tea-eyebrow w-fit text-cyan-200/90">{t('hero.eyebrow')}</p>
 
             <h1 className="tea-display mt-6 max-w-3xl text-balance text-[2.75rem] leading-[1.05] text-white sm:text-[3.75rem]">
-              Your AI has tea about you.
+              {t('hero.headline')}
             </h1>
 
             <p className="mt-6 max-w-xl text-[1.0625rem] leading-[1.65] text-slate-300/90">
-              Find out how your AI reads your style — in under two minutes.
+              {t('hero.subheadline')}
             </p>
 
             <div>
@@ -78,7 +80,7 @@ export default function Home() {
                 aria-controls="entry-section"
                 className="tea-press mt-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[0.95rem] font-medium text-slate-950 shadow-[0_1px_0_0_rgba(255,255,255,0.4)_inset,0_10px_40px_-18px_rgba(255,255,255,0.45)] hover:bg-slate-100"
               >
-                See what your AI thinks of you
+                {t('hero.cta')}
                 <span aria-hidden className="translate-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:translate-x-0.5">
                   →
                 </span>

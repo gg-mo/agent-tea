@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
 import { TeaHomeBadge } from '@/components/shared/TeaHomeBadge';
+import { useI18n } from '@/lib/i18n/I18nProvider';
+import { QUESTION_TEXT_ZH } from '@/lib/i18n/question-text-zh';
 
 type ReplayAnswer = {
   questionCode: string;
@@ -22,12 +24,12 @@ type ReplayPayload = {
   };
 };
 
-const OPTIONS: Array<{ value: 1 | 2 | 3 | 4 | 5; label: string }> = [
-  { value: 1, label: 'Strongly disagree' },
-  { value: 2, label: 'Disagree' },
-  { value: 3, label: 'Neutral' },
-  { value: 4, label: 'Agree' },
-  { value: 5, label: 'Strongly agree' },
+const OPTION_KEYS: Array<{ value: 1 | 2 | 3 | 4 | 5; key: string }> = [
+  { value: 1, key: 'replay.optSD' },
+  { value: 2, key: 'replay.optD' },
+  { value: 3, key: 'replay.optN' },
+  { value: 4, key: 'replay.optA' },
+  { value: 5, key: 'replay.optSA' },
 ];
 
 const STAGE = {
@@ -56,6 +58,7 @@ export function ReplayExperience({
   result: ReplayPayload;
   sessionId: string;
 }) {
+  const { t } = useI18n();
   const steps = useMemo(() => pickReplaySet(result), [result]);
   const [stepIndex, setStepIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
@@ -107,8 +110,8 @@ export function ReplayExperience({
       >
         <TeaHomeBadge />
         <div className="mx-auto max-w-2xl text-center">
-          <p className="tea-fade-in text-sm uppercase tracking-[0.3em] text-cyan-200/80">Spilling the tea</p>
-          <p className="tea-rise-in mt-4 text-xl text-slate-200">Preparing your verdict…</p>
+          <p className="tea-fade-in text-sm uppercase tracking-[0.3em] text-cyan-200/80">{t('replay.spilling')}</p>
+          <p className="tea-rise-in mt-4 text-xl text-slate-200">{t('replay.preparing')}</p>
         </div>
       </main>
     );
@@ -130,9 +133,11 @@ export function ReplayExperience({
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-4xl flex-col">
         <header className="flex items-center justify-between gap-3 pt-2">
           <div>
-            <p className="tea-eyebrow text-cyan-200/80">Spilling the tea</p>
+            <p className="tea-eyebrow text-cyan-200/80">{t('replay.spilling')}</p>
             <p className="mt-2 text-sm text-slate-300">
-              Question {stepIndex + 1} of {totalSteps} · take your time
+              {t('replay.questionOf')
+                .replace('{current}', String(stepIndex + 1))
+                .replace('{total}', String(totalSteps))}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -145,17 +150,17 @@ export function ReplayExperience({
                   ? 'border-cyan-200/60 bg-cyan-200/15 text-cyan-50'
                   : 'border-white/15 bg-white/[0.04] text-slate-200 hover:bg-white/[0.08]'
               }`}
-              title={autoplay ? 'Autoplay on — click to pause' : 'Autoplay off — click to let it play itself'}
+              title={autoplay ? t('replay.autoplayOn') : t('replay.autoplayOff')}
             >
               <span aria-hidden className="text-[0.7rem]">{autoplay ? '❚❚' : '▶'}</span>
-              {autoplay ? 'Autoplay' : 'Self-paced'}
+              {autoplay ? t('replay.autoplay') : t('replay.selfPaced')}
             </button>
             <button
               type="button"
               onClick={skipToResults}
               className="tea-press rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-medium text-slate-200 hover:bg-white/[0.08]"
             >
-              Skip to result →
+              {t('replay.skipToResult')}
             </button>
           </div>
         </header>
@@ -207,6 +212,11 @@ function ReplayStep({
   autoplay: boolean;
   onAdvance: () => void;
 }) {
+  const { t, lang } = useI18n();
+  const questionText =
+    lang === 'zh' && QUESTION_TEXT_ZH[step.questionCode]
+      ? QUESTION_TEXT_ZH[step.questionCode]
+      : step.questionText;
   const [phase, setPhase] = useState<'question' | 'options' | 'highlight' | 'bubble' | 'finale'>(
     'question',
   );
@@ -292,7 +302,7 @@ function ReplayStep({
             {step.questionCode}
           </p>
           <h2 className="tea-display mt-3 text-balance text-[1.6rem] leading-[1.25] text-white sm:text-[1.9rem]">
-            {step.questionText}
+            {questionText}
           </h2>
 
           <ul
@@ -300,7 +310,7 @@ function ReplayStep({
               phase === 'question' ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
             }`}
           >
-            {OPTIONS.map((option) => {
+            {OPTION_KEYS.map((option) => {
               const isSelected = option.value === step.selectedValue;
               const showHighlight =
                 isSelected && (phase === 'highlight' || phase === 'bubble' || phase === 'finale');
@@ -313,7 +323,7 @@ function ReplayStep({
                       : 'border-white/[0.06] bg-white/[0.015] text-slate-300/80'
                   }`}
                 >
-                  <span>{option.label}</span>
+                  <span>{t(option.key)}</span>
                   <span
                     className={`inline-flex h-6 w-6 items-center justify-center rounded-full border text-[0.7rem] font-semibold transition-colors duration-500 ${
                       showHighlight
@@ -337,7 +347,7 @@ function ReplayStep({
             }`}
             aria-live="polite"
           >
-            {isLast ? 'Ready for the verdict?' : 'Read it at your own pace.'}
+            {isLast ? t('replay.readyForVerdict') : t('replay.readAtYourPace')}
           </p>
           <button
             type="button"
@@ -345,7 +355,7 @@ function ReplayStep({
             disabled={!ready}
             className="tea-press inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-45"
           >
-            {isLast ? 'Reveal my type' : 'Next'} →
+            {isLast ? t('replay.revealType') : t('replay.next')} →
           </button>
         </div>
       </div>

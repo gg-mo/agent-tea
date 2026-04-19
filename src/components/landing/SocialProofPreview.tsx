@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from 'react';
 
+import { useI18n } from '@/lib/i18n/I18nProvider';
+
 type Summary = {
   sampleCount: number;
 };
 
 export function SocialProofPreview() {
+  const { t } = useI18n();
   const [summary, setSummary] = useState<Summary | null>(null);
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export function SocialProofPreview() {
       <TeaCupIcon />
       <span className="whitespace-nowrap">
         <strong className="font-bold text-cyan-200">{sampleCount}</strong>{' '}
-        {sampleCount === 1 ? 'cup' : 'cups'} of tea spilled so far
+        {t(sampleCount === 1 ? 'social.teaSpilledOne' : 'social.teaSpilled')}
       </span>
     </div>
   );

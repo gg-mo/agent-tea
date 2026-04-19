@@ -1,9 +1,12 @@
 import type { DimensionId } from '@/lib/scoring/types';
 import {
   dimensionLabelsByMode,
+  dimensionLabelsByModeZh,
   dimensionNarratives,
+  dimensionNarrativesZh,
   type NarrativeMode,
 } from '@/lib/results/copy-content';
+import { TYPE_CONTENT_ZH } from '@/lib/results/type-content';
 import { moderateCopyLine, moderateCopyLines } from '@/lib/results/moderation';
 
 type DimensionBreakdown = {
@@ -41,6 +44,7 @@ export type BuildProfileCopyInput = {
   strongestSignals: StrongestSignal[];
   tieFlags: TieFlags;
   mode: NarrativeMode;
+  lang?: 'en' | 'zh';
 };
 
 type NicknamePair = { normal: string; intrusive: string };
@@ -71,7 +75,15 @@ const positiveLetterByDimension: Record<DimensionId, string> = {
   autonomy: 'D',
 };
 
-function findNickname(typeCode: string, mode: NarrativeMode): string {
+function findNickname(typeCode: string, mode: NarrativeMode, lang: 'en' | 'zh' = 'en'): string {
+  if (lang === 'zh') {
+    const zh = TYPE_CONTENT_ZH[typeCode];
+    const name = mode === 'intrusive' ? zh?.intrusiveName : zh?.normalName;
+    if (name) return name;
+    const pair = nicknameByTypeCode[typeCode];
+    if (!pair) return 'AI 驯兽师';
+    return mode === 'intrusive' ? pair.intrusive : pair.normal;
+  }
   const pair = nicknameByTypeCode[typeCode];
   if (!pair) {
     return 'Agent Whisperer';
@@ -114,17 +126,17 @@ function pickDimensionOrder(strongestSignals: StrongestSignal[]): DimensionId[] 
   return ordered;
 }
 
-export function getDimensionLabels(mode: NarrativeMode) {
-  return dimensionLabelsByMode[mode];
+export function getDimensionLabels(mode: NarrativeMode, lang: 'en' | 'zh' = 'en') {
+  return (lang === 'zh' ? dimensionLabelsByModeZh : dimensionLabelsByMode)[mode];
 }
 
 export function buildProfileCopy(input: BuildProfileCopyInput): ProfileCopy {
-  const { typeCode, breakdown, strongestSignals, tieFlags, mode } = input;
+  const { typeCode, breakdown, strongestSignals, tieFlags, mode, lang = 'en' } = input;
   const clarity = percent(breakdown.clarity.positivePercent);
   const kindness = percent(breakdown.tone.positivePercent);
   const visionary = percent(breakdown.thinking_style.positivePercent);
   const delegating = percent(breakdown.autonomy.positivePercent);
-  const nickname = findNickname(typeCode, mode);
+  const nickname = findNickname(typeCode, mode, lang);
 
   const averageConfidence =
     (Math.abs(breakdown.clarity.positivePercent - breakdown.clarity.negativePercent) +
@@ -134,21 +146,28 @@ export function buildProfileCopy(input: BuildProfileCopyInput): ProfileCopy {
     4;
 
   const oneLinerBase =
-    mode === 'normal'
-      ? `Your AI reads you as ${nickname}: ${clarity}% clear, ${kindness}% kind, ${visionary}% visionary, and ${delegating}% delegating.`
-      : averageConfidence < 0.25
-        ? `Low-certainty intrusive thought: ${nickname}. Right now your vibe lands at ${clarity}% clear, ${kindness}% kind, ${visionary}% visionary, and ${delegating}% delegating.`
-        : `Intrusive thought unlocked: ${nickname}. Your AI clocks you at ${clarity}% clear, ${kindness}% kind, ${visionary}% visionary, and ${delegating}% delegating.`;
+    lang === 'zh'
+      ? mode === 'normal'
+        ? `你的 AI 觉得你是 ${nickname}：${clarity}% 清晰，${kindness}% 友善，${visionary}% 愿景型，${delegating}% 放权型。`
+        : averageConfidence < 0.25
+          ? `低置信度内心 OS：${nickname}。就目前来看，你给人的 vibe 大概是 ${clarity}% 清晰，${kindness}% 友善，${visionary}% 愿景型，${delegating}% 放权型。`
+          : `内心 OS 已解锁：${nickname}。你的 AI 认为你有 ${clarity}% 清晰，${kindness}% 友善，${visionary}% 愿景型，${delegating}% 放权型。`
+      : mode === 'normal'
+        ? `Your AI reads you as ${nickname}: ${clarity}% clear, ${kindness}% kind, ${visionary}% visionary, and ${delegating}% delegating.`
+        : averageConfidence < 0.25
+          ? `Low-certainty intrusive thought: ${nickname}. Right now your vibe lands at ${clarity}% clear, ${kindness}% kind, ${visionary}% visionary, and ${delegating}% delegating.`
+          : `Intrusive thought unlocked: ${nickname}. Your AI clocks you at ${clarity}% clear, ${kindness}% kind, ${visionary}% visionary, and ${delegating}% delegating.`;
 
   const dimensionOrder = pickDimensionOrder(strongestSignals);
   const loves: string[] = [];
   const frustrates: string[] = [];
+  const narrativesSource = lang === 'zh' ? dimensionNarrativesZh : dimensionNarratives;
 
   for (const dimension of dimensionOrder) {
     const positiveDominant = isPositiveDominant(dimension, breakdown[dimension].dominantLetter);
     const dominantSide = positiveDominant ? 'positive' : 'negative';
     const weakSignal = tieFlags[dimension] || getSignalDelta(dimension, breakdown, strongestSignals) < 0.2;
-    const narrative = dimensionNarratives[dimension][dominantSide];
+    const narrative = narrativesSource[dimension][dominantSide];
 
     const picked =
       mode === 'normal'

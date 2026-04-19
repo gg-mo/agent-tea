@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { LobsterMascot } from '@/components/landing/LobsterMascot';
+import { useI18n } from '@/lib/i18n/I18nProvider';
 
 type Mode = 'coding' | 'chatbot';
 
@@ -17,8 +18,9 @@ type CodingFlowState = 'idle' | 'creating' | 'waiting' | 'error';
 
 type ChatbotCopyState = 'idle' | 'loading' | 'error';
 
-async function fetchChatbotInstruction(): Promise<string> {
-  const response = await fetch('/instructions/chatbot.md', { cache: 'no-store' });
+async function fetchChatbotInstruction(lang: 'en' | 'zh'): Promise<string> {
+  const path = lang === 'zh' ? '/instructions/chatbot.zh.md' : '/instructions/chatbot.md';
+  const response = await fetch(path, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('Could not load the full instructions. Please try again.');
   }
@@ -69,6 +71,7 @@ function getReferralContext() {
 }
 
 export function LandingEntryCards() {
+  const { t, lang } = useI18n();
   const [selectedMode, setSelectedMode] = useState<Mode | null>(null);
   const [showChatbotPanel, setShowChatbotPanel] = useState(false);
   const [copiedKey, setCopiedKey] = useState<Mode | null>(null);
@@ -85,7 +88,8 @@ export function LandingEntryCards() {
   const chatbotPanelRef = useRef<HTMLDivElement | null>(null);
   const manualCopyRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const codingInstructionUrl = origin ? `${origin}/instructions/coding-agent.md` : '/instructions/coding-agent.md';
+  const codingInstructionPath = lang === 'zh' ? '/instructions/coding-agent.zh.md' : '/instructions/coding-agent.md';
+  const codingInstructionUrl = origin ? `${origin}${codingInstructionPath}` : codingInstructionPath;
 
   useEffect(() => {
     if (!codingSessionId || selectedMode !== 'coding') {
@@ -133,7 +137,7 @@ export function LandingEntryCards() {
   useEffect(() => {
     if (selectedMode !== 'chatbot' || fullPromptCache) return;
     let cancelled = false;
-    void fetchChatbotInstruction()
+    void fetchChatbotInstruction(lang)
       .then((contents) => {
         if (!cancelled) setFullPromptCache(contents);
       })
@@ -141,7 +145,7 @@ export function LandingEntryCards() {
     return () => {
       cancelled = true;
     };
-  }, [selectedMode, fullPromptCache]);
+  }, [selectedMode, fullPromptCache, lang]);
 
   useEffect(() => {
     if (!manualCopy) return;
@@ -167,9 +171,9 @@ export function LandingEntryCards() {
 
   const copyLabel = useMemo(() => {
     if (!copiedKey) return null;
-    if (copiedKey === 'coding') return 'Copied — paste this into your coding agent.';
-    return 'Copied — paste this into your chatbot.';
-  }, [copiedKey]);
+    if (copiedKey === 'coding') return t('coding.copied');
+    return t('chatbot.copied');
+  }, [copiedKey, t]);
 
   function copyText(key: Mode, value: string, manualTitle: string): boolean {
     const ok = writeToClipboard(value);
@@ -208,7 +212,7 @@ export function LandingEntryCards() {
 
   function buildCodingInstruction(sessionId: string) {
     const site = window.location.origin;
-    const instructionUrl = `${site}/instructions/coding-agent.md`;
+    const instructionUrl = `${site}${codingInstructionPath}`;
 
     return [
       `Follow the instructions in this file: ${instructionUrl}`,
@@ -225,21 +229,20 @@ export function LandingEntryCards() {
 
   async function copyChatbotFullPrompt() {
     setChatbotCopyError(null);
+    setShowChatbotPanel(true);
 
     // Prefer the cached copy so the clipboard write stays synchronous — Safari
     // and in-app browsers revoke the user-gesture permission across awaits.
     if (fullPromptCache) {
-      copyText('chatbot', fullPromptCache, 'Full chatbot prompt');
-      setShowChatbotPanel(true);
+      copyText('chatbot', fullPromptCache, t('copy.title.chatbotFull'));
       return;
     }
 
     try {
       setChatbotCopyState('loading');
-      const contents = await fetchChatbotInstruction();
+      const contents = await fetchChatbotInstruction(lang);
       setFullPromptCache(contents);
-      copyText('chatbot', contents, 'Full chatbot prompt');
-      setShowChatbotPanel(true);
+      copyText('chatbot', contents, t('copy.title.chatbotFull'));
       setChatbotCopyState('idle');
     } catch (error) {
       setChatbotCopyState('error');
@@ -255,10 +258,10 @@ export function LandingEntryCards() {
       setCodingFlowMessage('Preparing your private round…');
 
       const sessionId = await ensureCodingSession();
-      copyText('coding', buildCodingInstruction(sessionId), 'Coding agent instruction');
+      copyText('coding', buildCodingInstruction(sessionId), t('copy.title.coding'));
 
       setCodingFlowState('waiting');
-      setCodingFlowMessage('Copied. Paste it to your coding agent — your reveal opens automatically.');
+      setCodingFlowMessage(t('coding.copied'));
     } catch (error) {
       setCodingFlowState('error');
       setCodingFlowMessage(
@@ -273,12 +276,12 @@ export function LandingEntryCards() {
     if (!payload) {
       setDecodeState({
         status: 'error',
-        message: 'Paste the reply from your chatbot first.',
+        message: t('decode.emptyError'),
       });
       return;
     }
 
-    setDecodeState({ status: 'working', message: 'Decoding your reply…' });
+    setDecodeState({ status: 'working', message: t('decode.working') });
 
     try {
       const referral = getReferralContext();
@@ -324,14 +327,14 @@ export function LandingEntryCards() {
         const fallbackMessage =
           typeof ingestData.error === 'string' && ingestData.error
             ? `Server error: ${ingestData.error}`
-            : 'Could not decode that reply. Please try again.';
+            : t('decode.fallbackError');
 
         setDecodeState({
           status: 'error',
           sessionId: sessionData.sessionId,
           message:
             rawHints.length > 0
-              ? 'That reply needs a small fix. See tips below.'
+              ? t('decode.needsFix')
               : fallbackMessage,
           hints: rawHints.map((hint: Record<string, string>) => ({
             token: hint.token,
@@ -345,7 +348,7 @@ export function LandingEntryCards() {
       setDecodeState({
         status: 'success',
         sessionId: sessionData.sessionId,
-        message: 'Decoded. Opening your reveal…',
+        message: t('decode.success'),
       });
 
       await fetch(`/api/sessions/${sessionData.sessionId}/score`, { method: 'POST' });
@@ -389,22 +392,22 @@ export function LandingEntryCards() {
           className="pointer-events-none absolute -right-6 -top-8 w-24 rotate-6 opacity-20"
         />
         <div className="flex items-center gap-2">
-          <h2 className="tea-eyebrow text-orange-200/80">Coding Agents</h2>
+          <h2 className="tea-eyebrow text-orange-200/80">{t('entry.coding.eyebrow')}</h2>
           <span className="rounded-full border border-orange-300/30 bg-orange-300/10 px-2 py-0.5 text-[0.62rem] font-medium uppercase tracking-[0.12em] text-orange-100/90">
-            Better experience
+            {t('entry.coding.badge')}
           </span>
         </div>
-        <p className="tea-headline mt-3 text-[1.5rem] text-white">I have a coding agent.</p>
+        <p className="tea-headline mt-3 text-[1.5rem] text-white">{t('entry.coding.headline')}</p>
         <p className="mt-1.5 text-[0.78rem] text-slate-400/90">
-          e.g. Claude Code, Codex, Cursor, Copilot, Windsurf
+          {t('entry.coding.examples')}
         </p>
 
         {selectedMode === 'coding' ? (
           <div className="tea-lines mt-5">
             <p className="text-[0.95rem] leading-[1.6] text-slate-300/90">
-              Copy the instruction, paste it into any{' '}
-              <em className="not-italic font-semibold text-orange-100">open chat or session</em>{' '}
-              with your coding agent.
+              {t('entry.coding.bodyBefore')}
+              <em className="not-italic font-semibold text-orange-100">{t('entry.coding.bodyEm')}</em>
+              {t('entry.coding.bodyAfter')}
             </p>
             <a
               href={codingInstructionUrl}
@@ -425,7 +428,7 @@ export function LandingEntryCards() {
                 disabled={codingFlowState === 'creating'}
                 className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100 disabled:cursor-wait disabled:opacity-75"
               >
-                {codingFlowState === 'creating' ? 'Preparing…' : 'Copy instruction'}
+                {codingFlowState === 'creating' ? t('entry.coding.preparing') : t('entry.coding.copy')}
               </button>
             </div>
           </div>
@@ -453,18 +456,18 @@ export function LandingEntryCards() {
           variant="card"
           className="pointer-events-none absolute -right-6 -top-8 w-24 -rotate-6 opacity-20"
         />
-        <h2 className="tea-eyebrow text-cyan-200/80">Chatbots</h2>
-        <p className="tea-headline mt-3 text-[1.5rem] text-white">I use a chatbot.</p>
+        <h2 className="tea-eyebrow text-cyan-200/80">{t('entry.chatbot.eyebrow')}</h2>
+        <p className="tea-headline mt-3 text-[1.5rem] text-white">{t('entry.chatbot.headline')}</p>
         <p className="mt-1.5 text-[0.78rem] text-slate-400/90">
-          e.g. ChatGPT, Gemini, Claude, Doubao, DeepSeek
+          {t('entry.chatbot.examples')}
         </p>
 
         {selectedMode === 'chatbot' ? (
           <div className="tea-lines mt-5">
             <p className="text-[0.95rem] leading-[1.6] text-slate-300/90">
-              We&apos;ll slip your chatbot a quiet prompt and ask it to whisper back what it
-              <em className="not-italic text-cyan-100/90"> really </em>
-              thinks of you. Paste its reply here to unlock the tea.
+              {t('entry.chatbot.bodyBefore')}
+              <em className="not-italic text-cyan-100/90">{t('entry.chatbot.bodyEm')}</em>
+              {t('entry.chatbot.bodyAfter')}
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <button
@@ -476,7 +479,7 @@ export function LandingEntryCards() {
                 disabled={chatbotCopyState === 'loading'}
                 className="tea-press inline-flex rounded-full bg-white px-5 py-2.5 text-[0.875rem] font-medium text-slate-950 hover:bg-slate-100 disabled:cursor-wait disabled:opacity-75"
               >
-                {chatbotCopyState === 'loading' ? 'Preparing…' : 'Copy chatbot prompt'}
+                {chatbotCopyState === 'loading' ? t('entry.coding.preparing') : t('entry.chatbot.copy')}
               </button>
             </div>
             {chatbotCopyError ? (
@@ -499,7 +502,7 @@ export function LandingEntryCards() {
             <span className="tea-dot tea-dot-2 h-1.5 w-1.5 rounded-full bg-orange-200" />
             <span className="tea-dot tea-dot-3 h-1.5 w-1.5 rounded-full bg-orange-200" />
           </span>
-          <span>Waiting for your agent to spill the tea…</span>
+          <span>{t('coding.waiting')}</span>
         </div>
       ) : selectedMode === 'coding' && codingFlowMessage ? (
         <p
@@ -514,18 +517,18 @@ export function LandingEntryCards() {
       {showChatbotPanel ? (
         <div ref={chatbotPanelRef} className="tea-rise-in scroll-mt-16 lg:col-span-2">
           <section className="rounded-[28px] border border-white/[0.08] bg-white/[0.03] p-7 backdrop-blur-xl">
-            <p className="tea-eyebrow text-cyan-200/80">Spill the tea</p>
+            <p className="tea-eyebrow text-cyan-200/80">{t('decode.eyebrow')}</p>
             <label
               htmlFor="chatbotEncodedPayload"
               className="tea-headline mt-2 block text-[1.25rem] text-white"
             >
-              What did your agent whisper back?
+              {t('decode.label')}
             </label>
             <textarea
               id="chatbotEncodedPayload"
               value={encodedPayload}
               onChange={(event) => setEncodedPayload(event.target.value)}
-              placeholder="AT1|Q01-5AQ02-4AQ03-3..."
+              placeholder={t('decode.placeholder')}
               autoCapitalize="off"
               autoComplete="off"
               autoCorrect="off"
@@ -540,7 +543,7 @@ export function LandingEntryCards() {
                 disabled={decodeState.status === 'working'}
                 className="tea-press inline-flex w-full justify-center rounded-full bg-cyan-300 px-6 py-3 text-[0.95rem] font-semibold text-slate-950 shadow-[0_10px_30px_-10px_rgba(34,211,238,0.6)] hover:bg-cyan-200 disabled:cursor-wait disabled:opacity-75 sm:w-auto"
               >
-                {decodeState.status === 'working' ? 'Decoding…' : 'Reveal my type'}
+                {decodeState.status === 'working' ? t('decode.decoding') : t('decode.reveal')}
               </button>
               <button
                 type="button"
@@ -556,7 +559,7 @@ export function LandingEntryCards() {
                 }}
                 className="text-[0.8rem] font-medium text-slate-400 underline-offset-4 transition-colors hover:text-slate-200 hover:underline"
               >
-                or paste from clipboard
+                {t('decode.pasteBtn')}
               </button>
             </div>
 
@@ -585,7 +588,7 @@ export function LandingEntryCards() {
                   >
                     <p className="font-medium text-white">{hint.token}</p>
                     <p className="text-slate-300/85">{hint.message}</p>
-                    <p className="mt-0.5 text-cyan-200/90">Try: {hint.suggestedFix}</p>
+                    <p className="mt-0.5 text-cyan-200/90">{t('decode.tryPrefix')}{hint.suggestedFix}</p>
                   </li>
                 ))}
               </ul>
@@ -614,7 +617,7 @@ export function LandingEntryCards() {
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="tea-eyebrow text-cyan-200/80">Copy manually</p>
+                <p className="tea-eyebrow text-cyan-200/80">{t('copy.eyebrow')}</p>
                 <h3 id="manual-copy-title" className="mt-1 text-lg font-semibold text-white">
                   {manualCopy.title}
                 </h3>
@@ -622,17 +625,14 @@ export function LandingEntryCards() {
               <button
                 type="button"
                 onClick={() => setManualCopy(null)}
-                aria-label="Close"
+                aria-label={t('copy.close')}
                 className="tea-press inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
               >
                 ×
               </button>
             </div>
             <p className="mt-2 text-[0.82rem] leading-5 text-slate-400">
-              Your browser blocked the auto-copy (common in WeChat, Instagram, and
-              similar in-app browsers). Long-press the text below, choose{' '}
-              <strong className="text-slate-200">Select All</strong>, then{' '}
-              <strong className="text-slate-200">Copy</strong>.
+              {t('copy.explainer')}
             </p>
             <textarea
               ref={manualCopyRef}
@@ -654,7 +654,7 @@ export function LandingEntryCards() {
                 }}
                 className="tea-press inline-flex rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-[0.85rem] font-medium text-slate-100 hover:bg-white/[0.1]"
               >
-                Select all
+                {t('copy.selectAll')}
               </button>
               <button
                 type="button"
@@ -664,7 +664,7 @@ export function LandingEntryCards() {
                 }}
                 className="tea-press inline-flex rounded-full bg-white px-4 py-2 text-[0.85rem] font-semibold text-slate-950 hover:bg-slate-100"
               >
-                Try copy again
+                {t('copy.tryAgain')}
               </button>
             </div>
           </div>
