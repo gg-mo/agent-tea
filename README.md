@@ -8,7 +8,7 @@
 
 Find out how your AI reads your style — in under two minutes.
 
-[![Live](https://img.shields.io/badge/live-agent--tea.vercel.app-0ea5e9?style=flat-square)](https://agent-tea.vercel.app)
+[![Live](https://img.shields.io/badge/live-agent--tea.com-0ea5e9?style=flat-square)](https://agent-tea.com)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![React 19](https://img.shields.io/badge/React-19-149eca?style=flat-square&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
@@ -151,8 +151,8 @@ Scoring, encoding, and API contracts are covered by Vitest. UI flows have a Play
 4. After deploy, run smoke + perf checks:
 
    ```bash
-   npm run ops:smoke -- https://agent-tea.vercel.app
-   npm run perf:critical -- https://agent-tea.vercel.app 20
+   npm run ops:smoke -- https://agent-tea.com
+   npm run perf:critical -- https://agent-tea.com 20
    ```
 
 Release playbook: [docs/release-ops.md](docs/release-ops.md).
